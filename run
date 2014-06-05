@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+mvn package appassembler:assemble
+echo
+echo
+echo
+sh ./target/appassembler/bin/task-list
