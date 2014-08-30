@@ -1,5 +1,5 @@
 
-class Task
+export class Task
 {
     constructor(private id: number, private description: string, private done: boolean) {}
 
