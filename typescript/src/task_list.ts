@@ -4,9 +4,10 @@ import readline = require('readline');
 
 export class TaskList
 {
+    static QUIT = 'quit';
     readline;
 
-    constructor(reader, writer) {
+    constructor(reader: NodeJS.ReadableStream, writer: NodeJS.WritableStream) {
 
         this.readline = readline.createInterface({
             terminal: false,
@@ -15,8 +16,15 @@ export class TaskList
         });
 
         this.readline.setPrompt("> ");
-        this.readline.on('line', (answer) => {
+        this.readline.on('line', (cmd) => {
+            if(cmd == TaskList.QUIT) {
+                this.readline.close();
+                return;
+            }
             this.readline.prompt();
+        });
+        this.readline.on('close', () => {
+            writer.end();
         });
     }
 

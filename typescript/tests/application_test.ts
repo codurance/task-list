@@ -26,7 +26,6 @@ class TestCtxt
     constructor(public test: nodeunit.Test){
         var count = 0;
         this.output.on('readable', () => {
-            console.log("readable");
             if(count >= this.expectations.length) {
                 this.test.ok(false, "Got output than expected proabably didn't quit")
                 this.test.done();
@@ -43,7 +42,7 @@ class TestCtxt
     read(expected) {
         var data = this.output.read(expected.length);
         if (data != null) {
-            console.log("read" + data);
+//            console.log("read" + data);
             this.test.equal(data.toString(), expected);
             return true;
         }
@@ -90,6 +89,11 @@ export function application_test(test: nodeunit.Test) {
     }
 
     execute('show');
+
+    execute("add project secrets");
+    execute("add task secrets Eat more donuts.");
+    execute("add task secrets Destroy all humans.");
+
     execute('quit');
 
     ctxt.run();
