@@ -16,13 +16,11 @@ export class TaskList
 
         this.readline.setPrompt("> ");
         this.readline.on('line', (answer) => {
-            this.readline.output.write("Hello " + answer + "\n");
             this.readline.prompt();
         });
     }
 
     run() {
-        this.readline.output.write("What's your name?\n");
         this.readline.prompt();
     }
 }
