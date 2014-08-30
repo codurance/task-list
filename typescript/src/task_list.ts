@@ -2,14 +2,31 @@
 
 import readline = require('readline');
 
-var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-//    terminal: false
-});
+export class TaskList
+{
+    readline;
 
-rl.setPrompt("> ", 1);
-rl.write("What's your name?\n");
-rl.question("What's your name?\n", (answer) => {
-    rl.write("Hello " + answer)
-});
+    constructor(reader, writer) {
+
+        this.readline = readline.createInterface({
+            terminal: false,
+            input: reader,
+            output: writer
+        });
+
+        this.readline.setPrompt("> ");
+        this.readline.on('line', (answer) => {
+            this.readline.output.write("Hello " + answer + "\n");
+            this.readline.prompt();
+        });
+    }
+
+    run() {
+        this.readline.output.write("What's your name?\n");
+        this.readline.prompt();
+    }
+}
+
+if(require.main == module) {
+    new TaskList(process.stdin, process.stdout).run()
+}
