@@ -1,6 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 ///
 
+import assert = require('assert');
 import nodeunit = require('nodeunit');
 import stream = require('stream');
 import task_list = require('../src/task_list');
@@ -27,14 +28,14 @@ class TestCtxt
         var count = 0;
         this.output.on('readable', () => {
             if(count >= this.expectations.length) {
-                this.test.ok(false, "Got output than expected proabably didn't quit")
+                assert.ok(false, "Got more output than expected proabably didn't quit")
                 this.test.done();
             } else if(this.expectations[count].test()) {
                 count += 1;
             }
         });
         this.output.on('end', () => {
-            this.test.equal(count, this.expectations.length);
+            assert.equal(count, this.expectations.length);
             this.test.done();
         });
     }
@@ -42,15 +43,14 @@ class TestCtxt
     read(expected) {
         var data = this.output.read(expected.length);
         if (data != null) {
-//            console.log("read " + data);
-            this.test.equal(data.toString(), expected);
+            data = data.toString();
+            assert.equal(data, expected);
             return true;
         }
         return false;
     }
 
     run() {
-        this.test.expect(this.expectations.length + 1);
         this.tl.run();
     }
 }
