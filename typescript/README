@@ -1,0 +1,25 @@
+
+Setup
+=====
+
+I think the following should work to get started
+once node/npm is installed run the following from this directory
+> npm install -g gruntcli
+> npm install
+> grunt
+
+I've not tested it without some additional things like typescript
+installed globally but I assume npm should sort that out correctly.
+
+TODO
+====
+
+The tests are bit funny at the moment because nodeunit assertions only
+fail at the end of the test. Fortunately the built in assertions format nicely
+and won't prevent additional tests from running so I use them mostly.
+Except one at the end to keep the grunt nodeunit plugin happy.
+This could be improved by migrating to a different test framework.
+Mocha looks good.
+
+
+
