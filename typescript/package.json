@@ -4,7 +4,7 @@
   "description": "task-list primitives exercise ported to typescript",
   "main": "test_list.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt nodeunit"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +12,10 @@
     "readline": "0.0.3"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-tsd": "^0.1.0",
+    "grunt-typescript": "^0.3.8",
     "nodeunit": "^0.9.0"
   }
 }

@@ -28,14 +28,14 @@ class TestCtxt
         var count = 0;
         this.output.on('readable', () => {
             if(count >= this.expectations.length) {
-                assert.ok(false, "Got more output than expected proabably didn't quit")
+                this.test.ok(false, "Got more output than expected proabably didn't quit")
                 this.test.done();
             } else if(this.expectations[count].test()) {
                 count += 1;
             }
         });
         this.output.on('end', () => {
-            assert.equal(count, this.expectations.length);
+            this.test.equal(count, this.expectations.length);
             this.test.done();
         });
     }
@@ -51,6 +51,7 @@ class TestCtxt
     }
 
     run() {
+        this.test.expect(1);
         this.tl.run();
     }
 }
