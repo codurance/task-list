@@ -99,7 +99,7 @@ export class TaskList
         this.tasks.each((project, taskList) => {
             this.println(project);
             taskList.forEach((task) => {
-                this.println(util.format("    [%s] %d: %s", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription()));
+                this.println(util.format("    [%s] %d: %s", (task.done ? 'x' : ' '), task.id, task.description));
             });
             this.println('');
         });
@@ -142,8 +142,8 @@ export class TaskList
         var found = false;
         this.tasks.each((project, taskList) => {
             taskList.forEach((task) => {
-                if (task.getId() == id) {
-                    task.setDone(done);
+                if (task.id == id) {
+                    task.done = done;
                     found = true;
                 }
             });

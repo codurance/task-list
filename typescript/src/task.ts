@@ -1,22 +1,22 @@
 
 export class Task
 {
-    constructor(private id: number, private description: string, private done: boolean) {}
+    constructor(private _id: number, private _description: string, private _done: boolean) {}
 
-    getId() {
-        return this.id;
+    get id() {
+        return this._id;
     }
 
-    getDescription() {
-        return this.description;
+    get description() {
+        return this._description;
     }
 
-    isDone() {
-        return this.done;
+    get done() {
+        return this._done;
     }
 
-    setDone(val: boolean) {
-        this.done = val;
+    set done(val: boolean) {
+        this._done = val;
     }
 }
 
