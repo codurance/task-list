@@ -13,30 +13,11 @@ function splitFirstSpace(s: string) {
     return [s.substr(0, pos), s.substr(pos+1)]
 }
 
-class Hash<Value> {
-    private store = {};
-
-    set(k: string, v: Value) {
-        this.store[k] = v;
-    }
-
-    get(k: string): Value {
-        return this.store[k];
-    }
-
-    each(func: (key: string, value: Value) => any) {
-        for(var key in this.store) {
-            if(this.store.hasOwnProperty(key))
-                func(key, this.store[key])
-        }
-    }
-}
-
 export class TaskList
 {
     static QUIT = 'quit';
     private readline;
-    private tasks = new Hash<task.Task[]>();
+    private tasks = {};
     private lastId = 0;
 
     constructor(reader: NodeJS.ReadableStream, writer: NodeJS.WritableStream) {
@@ -70,6 +51,13 @@ export class TaskList
         this.readline.prompt();
     }
 
+    forEachProject(func: (key: string, value: task.Task[]) => any) {
+        for(var key in this.tasks) {
+            if(this.tasks.hasOwnProperty(key))
+                func(key, this.tasks[key])
+        }
+    }
+
     execute(commandLine: string) {
         var commandRest = splitFirstSpace(commandLine);
         var command = commandRest[0];
@@ -96,7 +84,7 @@ export class TaskList
     }
 
     private show() {
-        this.tasks.each((project, taskList) => {
+        this.forEachProject((project, taskList) => {
             this.println(project);
             taskList.forEach((task) => {
                 this.println(util.format("    [%s] %d: %s", (task.done ? 'x' : ' '), task.id, task.description));
@@ -117,11 +105,11 @@ export class TaskList
     }
 
     private addProject(name: string) {
-        this.tasks.set(name, []);
+        this.tasks[name] = [];
     }
 
     private addTask(project: string, description: string) {
-        var projectTasks = this.tasks.get(project);
+        var projectTasks: task.Task[] = this.tasks[project];
         if (projectTasks == null) {
             this.println(util.format("Could not find a project with the name \"%s\".", project));
             return;
@@ -140,7 +128,7 @@ export class TaskList
     private setDone(idString: string, done: boolean) {
         var id = parseInt(idString, 10);
         var found = false;
-        this.tasks.each((project, taskList) => {
+        this.forEachProject((project, taskList) => {
             taskList.forEach((task) => {
                 if (task.id == id) {
                     task.done = done;
