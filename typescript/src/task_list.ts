@@ -17,7 +17,7 @@ export class TaskList
 {
     static QUIT = 'quit';
     private readline;
-    private tasks = {};
+    private tasks: {[index: string]: task.Task[]} = {};
     private lastId = 0;
 
     constructor(reader: NodeJS.ReadableStream, writer: NodeJS.WritableStream) {
@@ -109,7 +109,7 @@ export class TaskList
     }
 
     private addTask(project: string, description: string) {
-        var projectTasks: task.Task[] = this.tasks[project];
+        var projectTasks = this.tasks[project];
         if (projectTasks == null) {
             this.println(util.format("Could not find a project with the name \"%s\".", project));
             return;
