@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.lang.System.lineSeparator;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -107,7 +108,7 @@ public final class ApplicationTest {
 
     private void readLines(String... expectedOutput) throws IOException {
         for (String line : expectedOutput) {
-            read(line + "\n");
+            read(line + lineSeparator());
         }
     }
 
