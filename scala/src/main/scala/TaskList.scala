@@ -19,15 +19,15 @@ class TaskList extends Runnable {
   }
 
   private def execute(commandLine: String): Unit = {
-    val commandWords = commandLine.split("""\s""", 2)
-    val command = commandWords(0)
+    val commandParts = commandLine.split("""\s""", 2)
+    val command = commandParts(0)
     command match {
       case "" => ()
       case "help" => help()
       case "show" => show()
-      case "add" => add(commandWords(1))
-      case "check" => check(commandWords(1))
-      case "uncheck" => uncheck(commandWords(1))
+      case "add" => add(commandParts(1))
+      case "check" => check(commandParts(1))
+      case "uncheck" => uncheck(commandParts(1))
       case _ => showError(command)
     }
   }
@@ -83,13 +83,13 @@ class TaskList extends Runnable {
     (0L +: tasks.values.flatten.map(_.id).toList).max + 1L
   }
 
-  private def check(taskId: String): Unit = setDone(taskId, true)
+  private def check(idString: String): Unit = setDone(idString, true)
 
-  private def uncheck(taskId: String): Unit = setDone(taskId, false)
+  private def uncheck(idString: String): Unit = setDone(idString, false)
 
-  private def setDone(taskId: String, value: Boolean): Unit = {
-    tasks.values.flatten.find(_.id == taskId.toLong).foreach { task =>
-      task.done = value
+  private def setDone(idString: String, done: Boolean): Unit = {
+    tasks.values.flatten.find(_.id == idString.toLong).foreach { task =>
+      task.done = done
     }
   }
 
