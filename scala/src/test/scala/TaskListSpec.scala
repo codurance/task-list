@@ -24,7 +24,10 @@ class TaskListSpec extends FlatSpec with BeforeAndAfter {
   }
 
   after {
-    applicationThread.interrupt()
+    if (applicationThread != null && applicationThread.isAlive) {
+      applicationThread.interrupt()
+      throw new IllegalStateException("The application is still running.")
+    }
   }
 
   "A task list" should "work" in {
