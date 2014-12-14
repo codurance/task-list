@@ -1,15 +1,19 @@
-
 Setup
 =====
 
-I think the following should work to get started
-once node/npm is installed run the following from this directory
-> npm install -g gruntcli
-> npm install
-> grunt
+1. Install npm: https://www.npmjs.com/
 
-I've not tested it without some additional things like typescript
-installed globally but I assume npm should sort that out correctly.
+2. Install the dependencies:
+> npm install
+
+Usage
+=====
+
+Run the tests:
+> npm test
+
+Run the application:
+> npm start
 
 TODO
 ====
