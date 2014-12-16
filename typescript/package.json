@@ -4,6 +4,7 @@
   "description": "task-list primitives exercise ported to typescript",
   "main": "task_list.js",
   "scripts": {
+    "install": "tsd reinstall",
     "build": "tsc -t ES5 -m commonjs src/*.ts tests/*.ts",
     "start": "npm run-script build; node src/task_list.js",
     "test": "npm run-script build; nodeunit tests"
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "nodeunit": "^0.9.0",
+    "tsd": "^0.5.7",
     "typescript": "^1.3.0"
   }
 }

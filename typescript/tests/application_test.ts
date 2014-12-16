@@ -1,5 +1,4 @@
-/// <reference path="../typings/tsd.d.ts" />
-///
+/// <reference path="../typings/node/node.d.ts" />
 
 import assert = require('assert');
 import nodeunit = require('nodeunit');
