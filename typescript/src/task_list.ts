@@ -1,4 +1,4 @@
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
 
 import readline = require('readline');
 import util = require('util');
