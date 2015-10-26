@@ -101,7 +101,23 @@ public final class ApplicationTest {
         execute("check 9");
         readLines("Could not find a task with an ID of 9.");
 
+        execute("uncheck 1");
         execute("uncheck 3");
+        execute("show");
+        readLines(
+                "secrets",
+                "    [ ] 1: Eat more donuts.",
+                "    [ ] 2: Destroy all humans.",
+                "",
+                "training",
+                "    [ ] 3: Four Elements of Simple Design",
+                "    [ ] 4: SOLID",
+                "    [x] 5: Coupling and Cohesion",
+                "    [x] 6: Primitive Obsession",
+                "    [ ] 7: Outside-In TDD",
+                "    [ ] 8: Interaction-Driven Design",
+                ""
+        );
 
         execute("add task unknownProject SomeTask");
         readLines("Could not find a project with the name \"unknownProject\".");
