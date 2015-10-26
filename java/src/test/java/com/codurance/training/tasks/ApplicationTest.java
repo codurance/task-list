@@ -55,7 +55,6 @@ public final class ApplicationTest {
                 ""
         );
 
-
         execute("show");
 
         execute("add project secrets");
@@ -98,6 +97,9 @@ public final class ApplicationTest {
                 "    [ ] 8: Interaction-Driven Design",
                 ""
         );
+
+        execute("check 9");
+        readLines("Could not find a task with an ID of 9.");
 
         execute("quit");
     }
