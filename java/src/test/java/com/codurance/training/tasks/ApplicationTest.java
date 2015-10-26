@@ -101,6 +101,8 @@ public final class ApplicationTest {
         execute("check 9");
         readLines("Could not find a task with an ID of 9.");
 
+        execute("uncheck 3");
+
         execute("someUnknownCommand");
         readLines("I don't know what the command \"someUnknownCommand\" is.");
 
