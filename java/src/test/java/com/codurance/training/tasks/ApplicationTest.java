@@ -103,6 +103,9 @@ public final class ApplicationTest {
 
         execute("uncheck 3");
 
+        execute("add task unknownProject SomeTask");
+        readLines("Could not find a project with the name \"unknownProject\".");
+
         execute("someUnknownCommand");
         readLines("I don't know what the command \"someUnknownCommand\" is.");
 
