@@ -31,7 +31,7 @@ public final class TaskList implements Runnable {
 
     private final BufferedReader in;
     private final PrintWriter out;
-    private final ProjectsToTasks projectsToTasks = new ProjectsToTasks();
+    private final ProjectsToTasks projectsToTasks;
     private int lastId;
 
     public static void main(String[] args) throws Exception {
@@ -43,6 +43,7 @@ public final class TaskList implements Runnable {
     public TaskList(BufferedReader reader, PrintWriter writer) {
         this.in = reader;
         this.out = writer;
+        projectsToTasks = new ProjectsToTasks(out);
     }
 
     public void run() {
@@ -67,7 +68,7 @@ public final class TaskList implements Runnable {
         String command = commandRest[0];
         switch (command) {
             case CMD_SHOW:
-                projectsToTasks.show(out);
+                projectsToTasks.show();
                 break;
             case CMD_ADD:
                 add(commandRest[1]);
@@ -94,7 +95,7 @@ public final class TaskList implements Runnable {
             addProject(new Project(subCommandRest[1]));
         } else if (subCommand.equals(SUB_CMD_TASK)) {
             String[] projectTask = subCommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
-            projectsToTasks.addTask(nextTaskId(), new Project(projectTask[0]), projectTask[1], out);
+            projectsToTasks.addTask(nextTaskId(), new Project(projectTask[0]), projectTask[1]);
         }
     }
 
@@ -103,11 +104,11 @@ public final class TaskList implements Runnable {
     }
 
     private void check(String idString) {
-        projectsToTasks.setDone(idString, DONE, out);
+        projectsToTasks.setDone(idString, DONE);
     }
 
     private void unCheck(String idString) {
-        projectsToTasks.setDone(idString, NOT_DONE, out);
+        projectsToTasks.setDone(idString, NOT_DONE);
     }
 
     private void help() {
