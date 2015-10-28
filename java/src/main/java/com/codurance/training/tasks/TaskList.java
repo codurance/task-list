@@ -91,15 +91,15 @@ public final class TaskList implements Runnable {
         String[] subCommandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
         String subCommand = subCommandRest[0];
         if (subCommand.equals(SUB_CMD_PROJECT)) {
-            addProject(subCommandRest[1]);
+            addProject(new Project(subCommandRest[1]));
         } else if (subCommand.equals(SUB_CMD_TASK)) {
             String[] projectTask = subCommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
-            projectsToTasks.addTask(nextTaskId(), projectTask[0], projectTask[1], out);
+            projectsToTasks.addTask(nextTaskId(), new Project(projectTask[0]), projectTask[1], out);
         }
     }
 
-    private void addProject(String projectName) {
-        projectsToTasks.add(projectName, new Tasks());
+    private void addProject(Project project) {
+        projectsToTasks.add(project, new Tasks());
     }
 
     private void check(String idString) {
