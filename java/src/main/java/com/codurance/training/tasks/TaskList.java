@@ -25,11 +25,12 @@ public final class TaskList implements Runnable {
     private static final String ERROR_COMMAND_NOT_FOUND = "I don't know what the command \"%s\" is.";
 
     private static final boolean DONE = true;
-    private static final boolean KEEP_RUNNING = DONE;
+    private static final boolean KEEP_RUNNING = true;
 
     private static final int TIMES_TO_APPLY_SEPARATOR = 2;
-    protected static final int FIRST_PART_OF_PARAM = 0;
-    protected static final int REST_OF_PARAMS = 1;
+
+    private static final int FIRST_PART_OF_PARAM = 0;
+    private static final int REST_OF_PARAMS = 1;
 
     private final BufferedReader in;
     private final PrintWriter out;
