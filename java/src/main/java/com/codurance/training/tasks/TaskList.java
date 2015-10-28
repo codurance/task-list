@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import static com.codurance.training.tasks.Task.NOT_DONE;
 
@@ -32,7 +31,7 @@ public final class TaskList implements Runnable {
 
     private final BufferedReader in;
     private final PrintWriter out;
-    private final ProjectTasks projectTasks = new ProjectTasks();
+    private final ProjectsToTasks projectsToTasks = new ProjectsToTasks();
     private int lastId;
 
     public static void main(String[] args) throws Exception {
@@ -68,7 +67,7 @@ public final class TaskList implements Runnable {
         String command = commandRest[0];
         switch (command) {
             case CMD_SHOW:
-                projectTasks.show(out);
+                projectsToTasks.show(out);
                 break;
             case CMD_ADD:
                 add(commandRest[1]);
@@ -95,20 +94,20 @@ public final class TaskList implements Runnable {
             addProject(subCommandRest[1]);
         } else if (subCommand.equals(SUB_CMD_TASK)) {
             String[] projectTask = subCommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
-            projectTasks.addTask(nextTaskId(), projectTask[0], projectTask[1], out);
+            projectsToTasks.addTask(nextTaskId(), projectTask[0], projectTask[1], out);
         }
     }
 
     private void addProject(String projectName) {
-        projectTasks.add(projectName, new ArrayList<Task>());
+        projectsToTasks.add(projectName, new Tasks());
     }
 
     private void check(String idString) {
-        projectTasks.setDone(idString, DONE, out);
+        projectsToTasks.setDone(idString, DONE, out);
     }
 
     private void unCheck(String idString) {
-        projectTasks.setDone(idString, NOT_DONE, out);
+        projectsToTasks.setDone(idString, NOT_DONE, out);
     }
 
     private void help() {
