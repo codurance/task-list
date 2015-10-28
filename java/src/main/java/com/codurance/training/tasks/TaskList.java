@@ -28,6 +28,8 @@ public final class TaskList implements Runnable {
     private static final boolean KEEP_RUNNING = DONE;
 
     private static final int TIMES_TO_APPLY_SEPARATOR = 2;
+    protected static final int FIRST_PART_OF_PARAM = 0;
+    protected static final int REST_OF_PARAMS = 1;
 
     private final BufferedReader in;
     private final PrintWriter out;
@@ -90,17 +92,26 @@ public final class TaskList implements Runnable {
 
     private void add(String commandLine) {
         String[] subCommandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
-        String subCommand = subCommandRest[0];
+        String subCommand = subCommandRest[FIRST_PART_OF_PARAM];
         if (subCommand.equals(SUB_CMD_PROJECT)) {
-            addProject(new Project(subCommandRest[1]));
+            addProject(subCommandRest[REST_OF_PARAMS]);
         } else if (subCommand.equals(SUB_CMD_TASK)) {
-            String[] projectTask = subCommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
-            projectsToTasks.addTask(nextTaskId(), new Project(projectTask[0]), projectTask[1]);
+            addTaskToProject(subCommandRest[REST_OF_PARAMS]);
         }
     }
 
-    private void addProject(Project project) {
-        projectsToTasks.add(project, new Tasks());
+    private void addTaskToProject(String restOfCommandLine) {
+        String[] commandParameters = restOfCommandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
+
+        String projectName = commandParameters[FIRST_PART_OF_PARAM];
+        Project project = new Project(projectName);
+        String taskDescription = commandParameters[REST_OF_PARAMS];
+
+        projectsToTasks.addTask(nextTaskId(), project, taskDescription);
+    }
+
+    private void addProject(String projectName) {
+        projectsToTasks.add(new Project(projectName), new Tasks());
     }
 
     private void check(String idString) {
