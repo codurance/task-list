@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+
+import static com.codurance.training.tasks.Task.NOT_DONE;
 
 public final class TaskList implements Runnable {
     private static final String COMMAND_SEPARATOR = " ";
@@ -24,25 +23,17 @@ public final class TaskList implements Runnable {
     private static final String SUB_CMD_PROJECT = "project";
     private static final String SUB_CMD_TASK = "task";
 
-    private static final String PRINT_LINE_FORMATTER = "    [%c] %d: %s%n";
-    private static final String COULD_NOT_FIND_A_PROJECT = "Could not find a project with the name \"%s\".";
-    private static final String COULD_NOT_FIND_A_TASK = "Could not find a task with an ID of %d.";
     private static final String ERROR_COMMAND_NOT_FOUND = "I don't know what the command \"%s\" is.";
-
-    private static final char TASK_DONE_SYMBOL = 'x';
-    private static final char TASK_NOT_DONE_SYMBOL = ' ';
 
     private static final boolean DONE = true;
     private static final boolean KEEP_RUNNING = DONE;
-    private static final boolean NOT_DONE = false;
 
-    private static final int TIMES_TO_APPLY_PATTERN = 2;
+    private static final int TIMES_TO_APPLY_SEPARATOR = 2;
 
-    private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
     private final BufferedReader in;
     private final PrintWriter out;
-
-    private long lastId = 0;
+    private final ProjectTasks projectTasks = new ProjectTasks();
+    private int lastId;
 
     public static void main(String[] args) throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -73,11 +64,11 @@ public final class TaskList implements Runnable {
     }
 
     private void execute(String commandLine) {
-        String[] commandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_PATTERN);
+        String[] commandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
         String command = commandRest[0];
         switch (command) {
             case CMD_SHOW:
-                show();
+                projectTasks.show(out);
                 break;
             case CMD_ADD:
                 add(commandRest[1]);
@@ -86,7 +77,7 @@ public final class TaskList implements Runnable {
                 check(commandRest[1]);
                 break;
             case CMD_UNCHECK:
-                uncheck(commandRest[1]);
+                unCheck(commandRest[1]);
                 break;
             case CMD_HELP:
                 help();
@@ -97,61 +88,27 @@ public final class TaskList implements Runnable {
         }
     }
 
-    private void show() {
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            out.println(project.getKey());
-            for (Task task : project.getValue()) {
-                out.printf(PRINT_LINE_FORMATTER, (task.isDone() ? TASK_DONE_SYMBOL : TASK_NOT_DONE_SYMBOL), task.getId(), task.getDescription());
-            }
-            out.println();
-        }
-    }
-
     private void add(String commandLine) {
-        String[] subcommandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_PATTERN);
-        String subcommand = subcommandRest[0];
-        if (subcommand.equals(SUB_CMD_PROJECT)) {
-            addProject(subcommandRest[1]);
-        } else if (subcommand.equals(SUB_CMD_TASK)) {
-            String[] projectTask = subcommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_PATTERN);
-            addTask(projectTask[0], projectTask[1]);
+        String[] subCommandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
+        String subCommand = subCommandRest[0];
+        if (subCommand.equals(SUB_CMD_PROJECT)) {
+            addProject(subCommandRest[1]);
+        } else if (subCommand.equals(SUB_CMD_TASK)) {
+            String[] projectTask = subCommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
+            projectTasks.addTask(nextTaskId(), projectTask[0], projectTask[1], out);
         }
     }
 
-    private void addProject(String name) {
-        tasks.put(name, new ArrayList<Task>());
-    }
-
-    private void addTask(String project, String description) {
-        List<Task> projectTasks = tasks.get(project);
-        if (projectTasks == null) {
-            out.printf(COULD_NOT_FIND_A_PROJECT, project);
-            out.println();
-            return;
-        }
-        projectTasks.add(new Task(nextId(), description, NOT_DONE));
+    private void addProject(String projectName) {
+        projectTasks.add(projectName, new ArrayList<Task>());
     }
 
     private void check(String idString) {
-        setDone(idString, DONE);
+        projectTasks.setDone(idString, DONE, out);
     }
 
-    private void uncheck(String idString) {
-        setDone(idString, NOT_DONE);
-    }
-
-    private void setDone(String idString, boolean done) {
-        int id = Integer.parseInt(idString);
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            for (Task task : project.getValue()) {
-                if (task.getId() == id) {
-                    task.setDone(done);
-                    return;
-                }
-            }
-        }
-        out.printf(COULD_NOT_FIND_A_TASK, id);
-        out.println();
+    private void unCheck(String idString) {
+        projectTasks.setDone(idString, NOT_DONE, out);
     }
 
     private void help() {
@@ -169,7 +126,7 @@ public final class TaskList implements Runnable {
         out.println();
     }
 
-    private long nextId() {
+    private long nextTaskId() {
         return ++lastId;
     }
 }
