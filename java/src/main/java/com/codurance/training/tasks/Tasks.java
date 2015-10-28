@@ -5,19 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tasks {
+    public static final Tasks NO_TASKS = null;
+
     private static final String PRINT_LINE_FORMATTER = "    [%c] %d: %s%n";
 
     private static final char TASK_DONE_SYMBOL = 'x';
     private static final char TASK_NOT_DONE_SYMBOL = ' ';
 
-    private List<Task> list = new ArrayList<>();
+    private List<Task> tasksList = new ArrayList<>();
 
     public void add(Task task) {
-        list.add(task);
+        tasksList.add(task);
     }
 
-    public boolean setDone(int id, boolean done, PrintWriter out) {
-        for (Task task : list) {
+    public boolean setDone(int id, boolean done) {
+        for (Task task : tasksList) {
             if (task.getId() == id) {
                 task.setDone(done);
                 return true;
@@ -27,7 +29,7 @@ public class Tasks {
     }
 
     public void show(PrintWriter out) {
-        for (Task task : list) {
+        for (Task task : tasksList) {
             out.printf(PRINT_LINE_FORMATTER, (
                             task.isDone()
                                     ? TASK_DONE_SYMBOL
