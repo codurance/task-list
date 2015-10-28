@@ -29,8 +29,14 @@ public final class TaskList implements Runnable {
     private static final String COULD_NOT_FIND_A_TASK = "Could not find a task with an ID of %d.";
     private static final String ERROR_COMMAND_NOT_FOUND = "I don't know what the command \"%s\" is.";
 
-    private static final char TASK_DONE = 'x';
-    private static final char TASK_NOT_DONE = ' ';
+    private static final char TASK_DONE_SYMBOL = 'x';
+    private static final char TASK_NOT_DONE_SYMBOL = ' ';
+
+    private static final boolean DONE = true;
+    private static final boolean KEEP_RUNNING = DONE;
+    private static final boolean NOT_DONE = false;
+
+    private static final int TIMES_TO_APPLY_PATTERN = 2;
 
     private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
     private final BufferedReader in;
@@ -50,7 +56,7 @@ public final class TaskList implements Runnable {
     }
 
     public void run() {
-        while (true) {
+        while (KEEP_RUNNING) {
             out.print(COMMAND_PROMPT);
             out.flush();
             String command;
@@ -67,7 +73,7 @@ public final class TaskList implements Runnable {
     }
 
     private void execute(String commandLine) {
-        String[] commandRest = commandLine.split(COMMAND_SEPARATOR, 2);
+        String[] commandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_PATTERN);
         String command = commandRest[0];
         switch (command) {
             case CMD_SHOW:
@@ -95,19 +101,19 @@ public final class TaskList implements Runnable {
         for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
             out.println(project.getKey());
             for (Task task : project.getValue()) {
-                out.printf(PRINT_LINE_FORMATTER, (task.isDone() ? TASK_DONE : TASK_NOT_DONE), task.getId(), task.getDescription());
+                out.printf(PRINT_LINE_FORMATTER, (task.isDone() ? TASK_DONE_SYMBOL : TASK_NOT_DONE_SYMBOL), task.getId(), task.getDescription());
             }
             out.println();
         }
     }
 
     private void add(String commandLine) {
-        String[] subcommandRest = commandLine.split(COMMAND_SEPARATOR, 2);
+        String[] subcommandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_PATTERN);
         String subcommand = subcommandRest[0];
         if (subcommand.equals(SUB_CMD_PROJECT)) {
             addProject(subcommandRest[1]);
         } else if (subcommand.equals(SUB_CMD_TASK)) {
-            String[] projectTask = subcommandRest[1].split(COMMAND_SEPARATOR, 2);
+            String[] projectTask = subcommandRest[1].split(COMMAND_SEPARATOR, TIMES_TO_APPLY_PATTERN);
             addTask(projectTask[0], projectTask[1]);
         }
     }
@@ -123,15 +129,15 @@ public final class TaskList implements Runnable {
             out.println();
             return;
         }
-        projectTasks.add(new Task(nextId(), description, false));
+        projectTasks.add(new Task(nextId(), description, NOT_DONE));
     }
 
     private void check(String idString) {
-        setDone(idString, true);
+        setDone(idString, DONE);
     }
 
     private void uncheck(String idString) {
-        setDone(idString, false);
+        setDone(idString, NOT_DONE);
     }
 
     private void setDone(String idString, boolean done) {
