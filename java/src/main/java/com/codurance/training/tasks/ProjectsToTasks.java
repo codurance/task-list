@@ -26,14 +26,14 @@ public class ProjectsToTasks {
         projectsToTasksMapper.put(project, tasks);
     }
 
-    public void addTask(long nextTaskId, Project project, String description) {
+    public void addTask(long nextTaskId, Project project, String taskDescription) {
         Tasks projectTasks = getTasksFor(project);
         if (projectTasks == null) {
             out.printf(COULD_NOT_FIND_A_PROJECT, project);
             out.println();
-            return;
+        } else {
+            projectTasks.add(new Task(nextTaskId, taskDescription, NOT_DONE));
         }
-        projectTasks.add(new Task(nextTaskId, description, NOT_DONE));
     }
 
     void setDone(String idString, boolean done) {
