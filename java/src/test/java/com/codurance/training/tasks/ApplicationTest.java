@@ -6,31 +6,31 @@ import org.junit.Test;
 
 import java.io.*;
 
-import static java.lang.System.lineSeparator;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 public final class ApplicationTest {
-    private static final String PROMPT = "> ";
+
     private static final boolean AUTO_FLUSH = true;
 
     private final PipedOutputStream inStream = new PipedOutputStream();
-    private final Screen inWriter = getOutputSource(inStream);
+    private final Screen inWriter = getOutputTarget(inStream);
 
     private final PipedInputStream outStream = new PipedInputStream();
     private final Keyboard outReader = getInputSource(outStream);
 
+    private IOConsole ioConsole;
+
     private Thread applicationThread;
 
     public ApplicationTest() throws IOException {
-        Keyboard inputSource = getInputSource(new PipedInputStream(inStream));
-        Screen outputTarget = getOutputSource(new PipedOutputStream(outStream));
+        ioConsole = new IOConsole(outReader, inWriter);
 
-        TaskList taskList = new TaskList(inputSource, outputTarget);
+        Keyboard keyboard = getInputSource(new PipedInputStream(inStream));
+        Screen screen = getOutputTarget(new PipedOutputStream(outStream));
+        TaskList taskList = new TaskList(keyboard, screen);
+
         applicationThread = new Thread(taskList);
     }
 
-    private Screen getOutputSource(PipedOutputStream out) throws IOException {
+    private Screen getOutputTarget(PipedOutputStream out) throws IOException {
         return new Screen(new PrintWriter(out, AUTO_FLUSH));
     }
 
@@ -55,9 +55,9 @@ public final class ApplicationTest {
 
     @Test(timeout = 1000) public void
     it_works() throws IOException {
-        execute("help");
+        ioConsole.execute("help");
 
-        readLines("Commands:",
+        ioConsole.readLines("Commands:",
                 "  show",
                 "  add project <project name>",
                 "  add task <project name> <task description>",
@@ -66,35 +66,35 @@ public final class ApplicationTest {
                 ""
         );
 
-        execute("show");
+        ioConsole.execute("show");
 
-        execute("add project secrets");
-        execute("add task secrets Eat more donuts.");
-        execute("add task secrets Destroy all humans.");
+        ioConsole.execute("add project secrets");
+        ioConsole.execute("add task secrets Eat more donuts.");
+        ioConsole.execute("add task secrets Destroy all humans.");
 
-        execute("show");
-        readLines(
-            "secrets",
-            "    [ ] 1: Eat more donuts.",
-            "    [ ] 2: Destroy all humans.",
-            ""
+        ioConsole.execute("show");
+        ioConsole.readLines(
+                "secrets",
+                "    [ ] 1: Eat more donuts.",
+                "    [ ] 2: Destroy all humans.",
+                ""
         );
 
-        execute("add project training");
-        execute("add task training Four Elements of Simple Design");
-        execute("add task training SOLID");
-        execute("add task training Coupling and Cohesion");
-        execute("add task training Primitive Obsession");
-        execute("add task training Outside-In TDD");
-        execute("add task training Interaction-Driven Design");
+        ioConsole.execute("add project training");
+        ioConsole.execute("add task training Four Elements of Simple Design");
+        ioConsole.execute("add task training SOLID");
+        ioConsole.execute("add task training Coupling and Cohesion");
+        ioConsole.execute("add task training Primitive Obsession");
+        ioConsole.execute("add task training Outside-In TDD");
+        ioConsole.execute("add task training Interaction-Driven Design");
 
-        execute("check 1");
-        execute("check 3");
-        execute("check 5");
-        execute("check 6");
+        ioConsole.execute("check 1");
+        ioConsole.execute("check 3");
+        ioConsole.execute("check 5");
+        ioConsole.execute("check 6");
 
-        execute("show");
-        readLines(
+        ioConsole.execute("show");
+        ioConsole.readLines(
                 "secrets",
                 "    [x] 1: Eat more donuts.",
                 "    [ ] 2: Destroy all humans.",
@@ -109,13 +109,13 @@ public final class ApplicationTest {
                 ""
         );
 
-        execute("check 9");
-        readLines("Could not find a task with an ID of 9.");
+        ioConsole.execute("check 9");
+        ioConsole.readLines("Could not find a task with an ID of 9.");
 
-        execute("uncheck 1");
-        execute("uncheck 3");
-        execute("show");
-        readLines(
+        ioConsole.execute("uncheck 1");
+        ioConsole.execute("uncheck 3");
+        ioConsole.execute("show");
+        ioConsole.readLines(
                 "secrets",
                 "    [ ] 1: Eat more donuts.",
                 "    [ ] 2: Destroy all humans.",
@@ -130,34 +130,12 @@ public final class ApplicationTest {
                 ""
         );
 
-        execute("add task unknownProject SomeTask");
-        readLines("Could not find a project with the name \"unknownProject\".");
+        ioConsole.execute("add task unknownProject SomeTask");
+        ioConsole.readLines("Could not find a project with the name \"unknownProject\".");
 
-        execute("someUnknownCommand");
-        readLines("I don't know what the command \"someUnknownCommand\" is.");
+        ioConsole.execute("someUnknownCommand");
+        ioConsole.readLines("I don't know what the command \"someUnknownCommand\" is.");
 
-        execute("quit");
-    }
-
-    private void execute(String command) throws IOException {
-        read(PROMPT);
-        write(command);
-    }
-
-    private void read(String expectedOutput) throws IOException {
-        int length = expectedOutput.length();
-        char[] buffer = new char[length];
-        outReader.read(buffer, 0, length);
-        assertThat(String.valueOf(buffer), is(expectedOutput));
-    }
-
-    private void readLines(String... expectedOutput) throws IOException {
-        for (String line : expectedOutput) {
-            read(line + lineSeparator());
-        }
-    }
-
-    private void write(String input) {
-        inWriter.println(input);
+        ioConsole.execute("quit");
     }
 }
