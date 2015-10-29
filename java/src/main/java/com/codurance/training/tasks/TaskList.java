@@ -1,8 +1,6 @@
 package com.codurance.training.tasks;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import static com.codurance.training.tasks.Task.NOT_DONE;
@@ -32,19 +30,19 @@ public final class TaskList implements Runnable {
     private static final int FIRST_PART_OF_PARAM = 0;
     private static final int REST_OF_PARAMS = 1;
 
-    private final BufferedReader in;
+    private final Keyboard keyboard;
     private final PrintWriter out;
     private final ProjectsToTasks projectsToTasks;
     private int lastId;
 
     public static void main(String[] args) throws Exception {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        Keyboard keyboard = new Keyboard();
         PrintWriter out = new PrintWriter(System.out);
-        new TaskList(in, out).run();
+        new TaskList(keyboard, out).run();
     }
 
-    public TaskList(BufferedReader reader, PrintWriter writer) {
-        this.in = reader;
+    public TaskList(Keyboard keyboard, PrintWriter writer) {
+        this.keyboard = keyboard;
         this.out = writer;
         projectsToTasks = new ProjectsToTasks(out);
     }
@@ -55,7 +53,7 @@ public final class TaskList implements Runnable {
             out.flush();
             String command;
             try {
-                command = in.readLine();
+                command = keyboard.readLine();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

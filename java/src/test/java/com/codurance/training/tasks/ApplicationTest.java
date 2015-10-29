@@ -12,20 +12,29 @@ import static org.hamcrest.Matchers.is;
 
 public final class ApplicationTest {
     public static final String PROMPT = "> ";
+
     private final PipedOutputStream inStream = new PipedOutputStream();
-    private final PrintWriter inWriter = new PrintWriter(inStream, true);
+    private final PrintWriter inWriter = getOutputSource(inStream);
 
     private final PipedInputStream outStream = new PipedInputStream();
-    private final BufferedReader outReader = new BufferedReader(new InputStreamReader(outStream));
+    private final Keyboard outReader = getInputSource(outStream);
 
     private Thread applicationThread;
 
     public ApplicationTest() throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(new PipedInputStream(inStream)));
-        PrintWriter out = new PrintWriter(new PipedOutputStream(outStream), true);
+        Keyboard inputSource = getInputSource(new PipedInputStream(inStream));
+        PrintWriter outputTarget = getOutputSource(new PipedOutputStream(outStream));
 
-        TaskList taskList = new TaskList(in, out);
+        TaskList taskList = new TaskList(inputSource, outputTarget);
         applicationThread = new Thread(taskList);
+    }
+
+    private PrintWriter getOutputSource(PipedOutputStream out) throws IOException {
+        return new PrintWriter(out, true);
+    }
+
+    private Keyboard getInputSource(InputStream in) throws IOException {
+        return new Keyboard(new InputStreamReader(in));
     }
 
     @Before public void
