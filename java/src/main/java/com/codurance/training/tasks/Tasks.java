@@ -3,6 +3,9 @@ package com.codurance.training.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codurance.training.tasks.Task.MARKED_AS_DONE;
+import static com.codurance.training.tasks.Task.NOT_MARKED_AS_DONE;
+
 public class Tasks {
     public static final Tasks NO_TASKS = null;
 
@@ -19,12 +22,9 @@ public class Tasks {
 
     public boolean setDone(int id, boolean done) {
         for (Task task : tasksList) {
-            if (task.getId() == id) {
-                task.setDone(done);
-                return true;
-            }
+            if (task.setDoneUsing(id, done)) return MARKED_AS_DONE;
         }
-        return false;
+        return NOT_MARKED_AS_DONE;
     }
 
     public void show(Screen out) {
