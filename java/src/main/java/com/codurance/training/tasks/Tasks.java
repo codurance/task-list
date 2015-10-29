@@ -3,8 +3,8 @@ package com.codurance.training.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codurance.training.tasks.Task.MARKED_AS_DONE;
-import static com.codurance.training.tasks.Task.NOT_MARKED_AS_DONE;
+import static com.codurance.training.tasks.Task.FOUND_TASK_AND_MARKED_AS_DONE;
+import static com.codurance.training.tasks.Task.TASK_NOT_FOUND;
 
 public class Tasks {
     public static final Tasks NO_TASKS = null;
@@ -22,9 +22,9 @@ public class Tasks {
 
     public boolean setDone(int id, boolean done) {
         for (Task task : tasksList) {
-            if (task.setDoneUsing(id, done)) return MARKED_AS_DONE;
+            if (task.setDoneUsing(id, done)) return FOUND_TASK_AND_MARKED_AS_DONE;
         }
-        return NOT_MARKED_AS_DONE;
+        return TASK_NOT_FOUND;
     }
 
     public void show(Screen out) {

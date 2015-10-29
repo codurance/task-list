@@ -3,8 +3,8 @@ package com.codurance.training.tasks;
 public final class Task {
     public static final boolean NOT_DONE = false;
 
-    public static final boolean MARKED_AS_DONE = true;
-    public static final boolean NOT_MARKED_AS_DONE = false;
+    public static final boolean FOUND_TASK_AND_MARKED_AS_DONE = true;
+    public static final boolean TASK_NOT_FOUND = false;
 
     private final long id;
     private final String description;
@@ -35,8 +35,8 @@ public final class Task {
     public boolean setDoneUsing(int id, boolean done) {
         if (this.id == id) {
             setDone(done);
-            return MARKED_AS_DONE;
+            return FOUND_TASK_AND_MARKED_AS_DONE;
         }
-        return NOT_MARKED_AS_DONE;
+        return TASK_NOT_FOUND;
     }
 }
