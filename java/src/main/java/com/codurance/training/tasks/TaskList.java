@@ -1,7 +1,6 @@
 package com.codurance.training.tasks;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import static com.codurance.training.tasks.Task.NOT_DONE;
 
@@ -31,26 +30,25 @@ public final class TaskList implements Runnable {
     private static final int REST_OF_PARAMS = 1;
 
     private final Keyboard keyboard;
-    private final PrintWriter out;
+    private final Screen screen;
     private final ProjectsToTasks projectsToTasks;
     private int lastId;
 
     public static void main(String[] args) throws Exception {
         Keyboard keyboard = new Keyboard();
-        PrintWriter out = new PrintWriter(System.out);
-        new TaskList(keyboard, out).run();
+        Screen screen = new Screen();
+        new TaskList(keyboard, screen).run();
     }
 
-    public TaskList(Keyboard keyboard, PrintWriter writer) {
+    public TaskList(Keyboard keyboard, Screen screen) {
         this.keyboard = keyboard;
-        this.out = writer;
-        projectsToTasks = new ProjectsToTasks(out);
+        this.screen = screen;
+        projectsToTasks = new ProjectsToTasks(screen);
     }
 
     public void run() {
         while (KEEP_RUNNING) {
-            out.print(COMMAND_PROMPT);
-            out.flush();
+            screen.print(COMMAND_PROMPT);
             String command;
             try {
                 command = keyboard.readLine();
@@ -122,18 +120,18 @@ public final class TaskList implements Runnable {
     }
 
     private void help() {
-        out.println("Commands:");
-        out.println("  show");
-        out.println("  add project <project name>");
-        out.println("  add task <project name> <task description>");
-        out.println("  check <task ID>");
-        out.println("  uncheck <task ID>");
-        out.println();
+        screen.println("Commands:");
+        screen.println("  show");
+        screen.println("  add project <project name>");
+        screen.println("  add task <project name> <task description>");
+        screen.println("  check <task ID>");
+        screen.println("  uncheck <task ID>");
+        screen.println();
     }
 
     private void error(String command) {
-        out.printf(ERROR_COMMAND_NOT_FOUND, command);
-        out.println();
+        screen.printf(ERROR_COMMAND_NOT_FOUND, command);
+        screen.println();
     }
 
     private long nextTaskId() {

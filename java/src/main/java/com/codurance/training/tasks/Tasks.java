@@ -1,6 +1,5 @@
 package com.codurance.training.tasks;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class Tasks {
         return false;
     }
 
-    public void show(PrintWriter out) {
+    public void show(Screen out) {
         for (Task task : tasksList) {
             out.printf(PRINT_LINE_FORMATTER, (
                             task.isDone()

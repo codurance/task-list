@@ -6,14 +6,12 @@ import java.io.InputStreamReader;
 
 public class Keyboard {
     private BufferedReader input;
-    private InputStreamReader inputStreamReader = new InputStreamReader(System.in);
 
     public Keyboard() {
-        input = new BufferedReader(inputStreamReader);
+        input = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public Keyboard(InputStreamReader inputStreamReader) {
-        this.inputStreamReader = inputStreamReader;
         input = new BufferedReader(inputStreamReader);
     }
 
@@ -21,7 +19,7 @@ public class Keyboard {
         return input.readLine();
     }
 
-    public void read(char[] buffer, int start, int length) throws IOException {
-        input.read(buffer, start, length);
+    public void read(char[] buffer, int offset, int length) throws IOException {
+        input.read(buffer, offset, length);
     }
 }

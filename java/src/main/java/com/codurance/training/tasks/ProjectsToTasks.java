@@ -1,6 +1,5 @@
 package com.codurance.training.tasks;
 
-import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -12,9 +11,9 @@ public class ProjectsToTasks {
     private static final String COULD_NOT_FIND_A_PROJECT = "Could not find a project with the name \"%s\".";
 
     private final Map<Project, Tasks> projectsToTasksMapper = new LinkedHashMap<>();
-    private final PrintWriter out;
+    private final Screen out;
 
-    public ProjectsToTasks(PrintWriter out) {
+    public ProjectsToTasks(Screen out) {
         this.out = out;
     }
 

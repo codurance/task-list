@@ -11,10 +11,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public final class ApplicationTest {
-    public static final String PROMPT = "> ";
+    private static final String PROMPT = "> ";
+    private static final boolean AUTO_FLUSH = true;
 
     private final PipedOutputStream inStream = new PipedOutputStream();
-    private final PrintWriter inWriter = getOutputSource(inStream);
+    private final Screen inWriter = getOutputSource(inStream);
 
     private final PipedInputStream outStream = new PipedInputStream();
     private final Keyboard outReader = getInputSource(outStream);
@@ -23,14 +24,14 @@ public final class ApplicationTest {
 
     public ApplicationTest() throws IOException {
         Keyboard inputSource = getInputSource(new PipedInputStream(inStream));
-        PrintWriter outputTarget = getOutputSource(new PipedOutputStream(outStream));
+        Screen outputTarget = getOutputSource(new PipedOutputStream(outStream));
 
         TaskList taskList = new TaskList(inputSource, outputTarget);
         applicationThread = new Thread(taskList);
     }
 
-    private PrintWriter getOutputSource(PipedOutputStream out) throws IOException {
-        return new PrintWriter(out, true);
+    private Screen getOutputSource(PipedOutputStream out) throws IOException {
+        return new Screen(new PrintWriter(out, AUTO_FLUSH));
     }
 
     private Keyboard getInputSource(InputStream in) throws IOException {
