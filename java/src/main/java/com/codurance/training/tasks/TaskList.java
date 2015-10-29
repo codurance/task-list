@@ -2,19 +2,13 @@ package com.codurance.training.tasks;
 
 import java.io.IOException;
 
+import static com.codurance.training.tasks.Command.*;
 import static com.codurance.training.tasks.Task.NOT_DONE;
 
 public final class TaskList implements Runnable {
     private static final String COMMAND_SEPARATOR = " ";
 
     private static final String COMMAND_PROMPT = "> ";
-
-    private static final String CMD_QUIT = "quit";
-    private static final String CMD_SHOW = "show";
-    private static final String CMD_ADD = "add";
-    private static final String CMD_CHECK = "check";
-    private static final String CMD_UNCHECK = "uncheck";
-    private static final String CMD_HELP = "help";
 
     private static final String SUB_CMD_PROJECT = "project";
     private static final String SUB_CMD_TASK = "task";
@@ -49,42 +43,32 @@ public final class TaskList implements Runnable {
     public void run() {
         while (KEEP_RUNNING) {
             screen.print(COMMAND_PROMPT);
-            String command;
+
+            CommandLine commandLine;
             try {
-                command = keyboard.readLine();
+                commandLine = new CommandLine(keyboard.readLine());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            if (command.equals(CMD_QUIT)) {
+
+            if (commandLine.contains(CMD_QUIT)) {
                 break;
             }
-            execute(command);
+
+            execute(commandLine);
         }
     }
 
-    private void execute(String commandLine) {
-        String[] commandRest = commandLine.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
-        String command = commandRest[0];
-        switch (command) {
-            case CMD_SHOW:
-                projectsToTasks.show();
-                break;
-            case CMD_ADD:
-                add(commandRest[1]);
-                break;
-            case CMD_CHECK:
-                check(commandRest[1]);
-                break;
-            case CMD_UNCHECK:
-                unCheck(commandRest[1]);
-                break;
-            case CMD_HELP:
-                help();
-                break;
-            default:
-                error(command);
-                break;
-        }
+    private void execute(CommandLine commandLine) {
+        Command command = commandLine.getCommand();
+
+        if (command.equals(CMD_SHOW)) projectsToTasks.show();
+        else if (command.equals(CMD_ADD)) add(commandLine.getFirstParameter());
+        else if (command.equals(CMD_CHECK)) check(commandLine.getFirstParameter());
+        else if (command.equals(CMD_UNCHECK)) unCheck(commandLine.getFirstParameter());
+        else if (command.equals(CMD_QUIT)) ;
+        else if (command.equals(CMD_HELP)) help();
+        else error(command);
     }
 
     private void add(String commandLine) {
@@ -129,7 +113,7 @@ public final class TaskList implements Runnable {
         screen.println();
     }
 
-    private void error(String command) {
+    private void error(Command command) {
         screen.printf(ERROR_COMMAND_NOT_FOUND, command);
         screen.println();
     }
