@@ -1,25 +1,22 @@
 package com.codurance.training.tasks.command;
 
-import com.codurance.training.tasks.TaskListAddTaskCommand;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
+import com.codurance.training.tasks.io.Screen;
 
-public class TaskListAddCommand extends Command {
+public class TaskListAddCommand implements Command {
+    private Screen screen;
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListAddCommand(String commandName, ProjectsToTasks projectsToTasks) {
-        super(commandName);
+    public TaskListAddCommand(Screen screen, ProjectsToTasks projectsToTasks) {
+        this.screen = screen;
         this.projectsToTasks = projectsToTasks;
     }
 
-    public void add(CommandLine commandLine) {
-        CommandLine subCommandLine = new CommandLine(commandLine.getRestOfParameters(), projectsToTasks);
+    @Override
+    public void execute(CommandLine commandLine) {
+        CommandLine subCommandLine = new CommandLine(commandLine.getRestOfParameters(), screen, projectsToTasks);
 
-        if (SUB_CMD_PROJECT.equals(subCommandLine.getCommand().toString())) {
-            TaskListAddProjectCommand taskListAddProjectCommand = new TaskListAddProjectCommand("", projectsToTasks);
-            taskListAddProjectCommand.execute(subCommandLine);
-        } else if (SUB_CMD_TASK.equals(subCommandLine.getCommand().toString())) {
-            TaskListAddTaskCommand taskListAddTaskCommand = new TaskListAddTaskCommand("", projectsToTasks);
-            taskListAddTaskCommand.execute(subCommandLine);
-        }
+        Command command = subCommandLine.getCommand();
+        command.execute(subCommandLine);
     }
 }

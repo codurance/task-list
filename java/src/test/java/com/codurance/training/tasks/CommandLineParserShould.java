@@ -2,6 +2,7 @@ package com.codurance.training.tasks;
 
 import com.codurance.training.tasks.command.*;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
+import com.codurance.training.tasks.io.Screen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -17,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CommandLineParserShould {
 
     private static final ProjectsToTasks PROJECTS_TO_TASKS_NOT_USED = null;
+    private static final Screen SCREEN_IS_NOT_AVAILABLE = null;
 
     private final String commandName;
     private final Command expectedCommand;
@@ -25,13 +27,16 @@ public class CommandLineParserShould {
     public static Collection<Object[]> data() {
         return Arrays.asList(
                 new Object[][] {
-                        {"show", new TaskListShowCommand("show", PROJECTS_TO_TASKS_NOT_USED)},
-                        {"add", new TaskListAddCommand("add", PROJECTS_TO_TASKS_NOT_USED)},
-                        {"project xxx", new TaskListAddProjectCommand("project xxx", PROJECTS_TO_TASKS_NOT_USED)},
-                        {"task xxx", new TaskListAddTaskCommand("task xxx", PROJECTS_TO_TASKS_NOT_USED)},
-                        {"check", new TaskListCheckCommand("check", PROJECTS_TO_TASKS_NOT_USED)},
-                        {"uncheck", new TaskListUnCheckCommand("uncheck", PROJECTS_TO_TASKS_NOT_USED)},
-                        {"help", new HelpCommand("help")},
+                        {"show", new TaskListShowCommand(PROJECTS_TO_TASKS_NOT_USED)},
+                        {"add", new TaskListAddCommand(SCREEN_IS_NOT_AVAILABLE, PROJECTS_TO_TASKS_NOT_USED)},
+                        {"project xxx", new TaskListAddProjectCommand(PROJECTS_TO_TASKS_NOT_USED)},
+                        {"task xxx", new TaskListAddTaskCommand(SCREEN_IS_NOT_AVAILABLE, PROJECTS_TO_TASKS_NOT_USED)},
+                        {"check", new TaskListCheckCommand(PROJECTS_TO_TASKS_NOT_USED)},
+                        {"uncheck", new TaskListUnCheckCommand(PROJECTS_TO_TASKS_NOT_USED)},
+                        {"help", new HelpCommand(SCREEN_IS_NOT_AVAILABLE)},
+                        {"quit", new QuitCommand()},
+                        {"unknowncommand", new UnknownCommand("unknowncommand")},
+
                 }
         );
     }
@@ -43,7 +48,7 @@ public class CommandLineParserShould {
 
     @Test public void
     return_task_list_show_command_when_show_command_is_typed() {
-        CommandLine commandLine = new CommandLine(commandName, PROJECTS_TO_TASKS_NOT_USED);
+        CommandLine commandLine = new CommandLine(commandName, SCREEN_IS_NOT_AVAILABLE, PROJECTS_TO_TASKS_NOT_USED);
         Command command = commandLine.getCommand();
 
         assertThat(command, instanceOf(expectedCommand.getClass()));

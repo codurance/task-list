@@ -3,16 +3,16 @@ package com.codurance.training.tasks.command;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.domain.Task;
 
-public class TaskListCheckCommand extends Command {
+public class TaskListCheckCommand implements Command {
 
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListCheckCommand(String name, ProjectsToTasks projectsToTasks) {
-        super(name);
+    public TaskListCheckCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 
-    public void check(CommandLine commandLine) {
+    @Override
+    public void execute(CommandLine commandLine) {
         String idString = commandLine.getFirstParameter();
         projectsToTasks.setDone(idString, Task.DONE);
     }

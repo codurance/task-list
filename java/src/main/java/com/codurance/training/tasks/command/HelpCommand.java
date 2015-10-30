@@ -2,13 +2,16 @@ package com.codurance.training.tasks.command;
 
 import com.codurance.training.tasks.io.Screen;
 
-public class HelpCommand extends Command {
+public class HelpCommand implements Command {
 
-    public HelpCommand(String name) {
-        super(name);
+    private final Screen screen;
+
+    public HelpCommand(Screen screen) {
+        this.screen = screen;
     }
 
-    public static void help(Screen screen) {
+    @Override
+    public void execute(CommandLine commandLine) {
         screen.println("Commands:");
         screen.println("  show");
         screen.println("  add project <project name>");

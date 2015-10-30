@@ -4,16 +4,16 @@ import com.codurance.training.tasks.domain.ProjectsToTasks;
 
 import static com.codurance.training.tasks.domain.Task.NOT_DONE;
 
-public class TaskListUnCheckCommand extends Command {
+public class TaskListUnCheckCommand implements Command {
 
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListUnCheckCommand(String name, ProjectsToTasks projectsToTasks) {
-        super(name);
+    public TaskListUnCheckCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 
-    public void unCheck(CommandLine commandLine) {
+    @Override
+    public void execute(CommandLine commandLine) {
         String idString = commandLine.getFirstParameter();
         projectsToTasks.setDone(idString, NOT_DONE);
     }

@@ -2,16 +2,15 @@ package com.codurance.training.tasks.command;
 
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 
-public class TaskListShowCommand extends Command {
+public class TaskListShowCommand implements Command {
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListShowCommand(String name, ProjectsToTasks projectsToTasks) {
-        super(name);
+    public TaskListShowCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 
     @Override
-    public void execute(CommandLine... subCommandLine) {
+    public void execute(CommandLine commandLine) {
         projectsToTasks.show();
     }
 }

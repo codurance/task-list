@@ -35,7 +35,7 @@ public final class TaskList implements Runnable {
 
             CommandLine commandLine;
             try {
-                commandLine = new CommandLine(keyboard.readLine(), projectsToTasks);
+                commandLine = new CommandLine(keyboard.readLine(), screen, projectsToTasks);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -51,12 +51,13 @@ public final class TaskList implements Runnable {
     private void execute(CommandLine commandLine) {
         Command command = commandLine.getCommand();
 
-        if (command instanceof TaskListShowCommand) command.execute();
-        else if (command instanceof TaskListAddCommand) ((TaskListAddCommand) command).add(commandLine);
-        else if (command instanceof TaskListCheckCommand) ((TaskListCheckCommand)command).check(commandLine);
-        else if (command instanceof TaskListUnCheckCommand) ((TaskListUnCheckCommand)command).unCheck(commandLine);
+        if (command instanceof TaskListShowCommand ||
+                command instanceof TaskListAddCommand ||
+                command instanceof TaskListCheckCommand ||
+                command instanceof TaskListUnCheckCommand)
+            command.execute(commandLine);
         else if (command instanceof QuitCommand) return;
-        else if (command instanceof HelpCommand) HelpCommand.help(screen);
-        else ErrorCommand.error(screen, command);
+        else if (command instanceof HelpCommand) new HelpCommand(screen).execute(commandLine);
+        else new ErrorCommand(screen).execute(commandLine);
     }
 }

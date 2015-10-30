@@ -2,6 +2,7 @@ package com.codurance.training.tasks.command;
 
 import com.codurance.training.tasks.TaskListAddTaskCommand;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
+import com.codurance.training.tasks.io.Screen;
 
 public class CommandLine {
 
@@ -9,16 +10,20 @@ public class CommandLine {
     private static final int TIMES_TO_APPLY_SEPARATOR = 2;
 
     private static final int COMMAND = 0;
-    private static final int FIRST_PARAMETER = 1;
+    private static final int COMMAND_FIRST_PARAMETER = 1;
     private static final int REST_OF_THE_PARAMETERS = 1;
+
+    private static final int SUBCOMMAND_FIRST_PARAMETER = 0;
 
     private static final String NOTHING = "";
 
     private final String commandLineInput;
     private ProjectsToTasks projectsToTasks;
+    private Screen screen;
 
-    public CommandLine(String commandLineInput, ProjectsToTasks projectsToTasks) {
+    public CommandLine(String commandLineInput, Screen screen, ProjectsToTasks projectsToTasks) {
         this.commandLineInput = commandLineInput;
+        this.screen = screen;
         this.projectsToTasks = projectsToTasks;
     }
 
@@ -28,34 +33,29 @@ public class CommandLine {
         String commandName = commandLineSplit[COMMAND];
         switch (commandName) {
             case Command.CMD_SHOW:
-                return new TaskListShowCommand(commandName, projectsToTasks);
+                return new TaskListShowCommand(projectsToTasks);
             case Command.CMD_ADD:
-                return new TaskListAddCommand(commandName, projectsToTasks);
+                return new TaskListAddCommand(screen, projectsToTasks);
             case Command.SUB_CMD_PROJECT:
-                return new TaskListAddProjectCommand(commandName, projectsToTasks);
+                return new TaskListAddProjectCommand(projectsToTasks);
             case Command.SUB_CMD_TASK:
-                return new TaskListAddTaskCommand(commandName, projectsToTasks);
+                return new TaskListAddTaskCommand(screen, projectsToTasks);
             case Command.CMD_UNCHECK:
-                return new TaskListUnCheckCommand(commandName, projectsToTasks);
+                return new TaskListUnCheckCommand(projectsToTasks);
             case Command.CMD_CHECK:
-                return new TaskListCheckCommand(commandName, projectsToTasks);
+                return new TaskListCheckCommand(projectsToTasks);
             case Command.CMD_HELP:
-                return new HelpCommand(commandName);
+                return new HelpCommand(screen);
             case Command.CMD_QUIT:
-                return new QuitCommand(commandName);
+                return new QuitCommand();
 
         }
-        return new Command(commandName);
+        return new UnknownCommand(commandName);
     }
 
     public String getFirstParameter() {
-        String parameters[] = parseCommandLineFor(FIRST_PARAMETER).split(COMMAND_SEPARATOR);
-        return parameters[0];
-    }
-    
-    public String getSecondParameter() {
-        String parameters[] = parseCommandLineFor(FIRST_PARAMETER).split(COMMAND_SEPARATOR);
-        return parameters[1];
+        String parameters[] = parseCommandLineFor(COMMAND_FIRST_PARAMETER).split(COMMAND_SEPARATOR);
+        return parameters[SUBCOMMAND_FIRST_PARAMETER];
     }
 
     private String parseCommandLineFor(int index) {
@@ -63,24 +63,17 @@ public class CommandLine {
         return commandLineSplit[index];
     }
 
+    public String getRestOfParameters() {
+        String[] commandLineSplit = parseCommandLine();
+        if (commandLineSplit.length > 1) return commandLineSplit[REST_OF_THE_PARAMETERS];
+        return NOTHING;
+    }
+
     private String[] parseCommandLine() {
         return commandLineInput.split(COMMAND_SEPARATOR, TIMES_TO_APPLY_SEPARATOR);
     }
 
-    public String getRestOfParameters() {
-        String[] commandLineSplit = parseCommandLine();
-
-        if (commandLineSplit.length > 1) return commandLineSplit[REST_OF_THE_PARAMETERS];
-
-        return NOTHING;
-    }
-
     public boolean contains(String command) {
         return commandLineInput.equals(command);
-    }
-
-    @Override
-    public String toString() {
-        return commandLineInput;
     }
 }
