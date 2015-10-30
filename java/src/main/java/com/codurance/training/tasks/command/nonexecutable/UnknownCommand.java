@@ -1,4 +1,4 @@
-package com.codurance.training.tasks.command;
+package com.codurance.training.tasks.command.nonexecutable;
 
 public class UnknownCommand implements NonExecutableCommand {
     private String name;

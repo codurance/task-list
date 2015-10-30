@@ -1,4 +1,7 @@
-package com.codurance.training.tasks.command;
+package com.codurance.training.tasks.command.executable;
+
+import com.codurance.training.tasks.command.CommandLine;
+import com.codurance.training.tasks.command.nonexecutable.NonExecutableCommand;
 
 public interface ExecutableCommand extends NonExecutableCommand {
 

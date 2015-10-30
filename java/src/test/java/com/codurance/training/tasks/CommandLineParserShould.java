@@ -1,6 +1,10 @@
 package com.codurance.training.tasks;
 
 import com.codurance.training.tasks.command.*;
+import com.codurance.training.tasks.command.executable.*;
+import com.codurance.training.tasks.command.nonexecutable.NonExecutableCommand;
+import com.codurance.training.tasks.command.nonexecutable.QuitCommand;
+import com.codurance.training.tasks.command.nonexecutable.UnknownCommand;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.io.Screen;
 import org.junit.Test;

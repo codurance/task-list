@@ -1,12 +1,16 @@
 package com.codurance.training.tasks.domain;
 
 import com.codurance.training.tasks.command.*;
+import com.codurance.training.tasks.command.executable.ErrorExecutableCommand;
+import com.codurance.training.tasks.command.executable.ExecutableCommand;
+import com.codurance.training.tasks.command.nonexecutable.NonExecutableCommand;
+import com.codurance.training.tasks.command.nonexecutable.QuitCommand;
 import com.codurance.training.tasks.io.Keyboard;
 import com.codurance.training.tasks.io.Screen;
 
 import java.io.IOException;
 
-import static com.codurance.training.tasks.command.ExecutableCommand.*;
+import static com.codurance.training.tasks.command.executable.ExecutableCommand.*;
 
 public final class TaskList implements Runnable {
     private static final String COMMAND_PROMPT = "> ";

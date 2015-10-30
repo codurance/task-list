@@ -1,5 +1,7 @@
-package com.codurance.training.tasks.command;
+package com.codurance.training.tasks.command.executable;
 
+import com.codurance.training.tasks.command.CommandLine;
+import com.codurance.training.tasks.command.nonexecutable.NonExecutableCommand;
 import com.codurance.training.tasks.io.Screen;
 
 public class ErrorExecutableCommand implements ExecutableCommand {

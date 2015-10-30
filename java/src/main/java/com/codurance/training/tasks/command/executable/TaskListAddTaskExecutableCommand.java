@@ -1,6 +1,5 @@
-package com.codurance.training.tasks;
+package com.codurance.training.tasks.command.executable;
 
-import com.codurance.training.tasks.command.ExecutableCommand;
 import com.codurance.training.tasks.command.CommandLine;
 import com.codurance.training.tasks.domain.Project;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
