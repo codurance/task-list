@@ -1,10 +1,12 @@
-package com.codurance.training.tasks;
+package com.codurance.training.tasks.domain;
+
+import com.codurance.training.tasks.io.Screen;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codurance.training.tasks.Task.FOUND_TASK_AND_MARKED_AS_DONE;
-import static com.codurance.training.tasks.Task.TASK_NOT_FOUND;
+import static com.codurance.training.tasks.domain.Task.FOUND_TASK_AND_MARKED_AS_DONE;
+import static com.codurance.training.tasks.domain.Task.TASK_NOT_FOUND;
 
 public class Tasks {
     public static final Tasks NO_TASKS = null;
@@ -22,7 +24,7 @@ public class Tasks {
 
     public boolean setDone(int id, boolean done) {
         for (Task task : tasksList) {
-            if (task.setDoneUsing(id, done)) return FOUND_TASK_AND_MARKED_AS_DONE;
+            if (task.setDone(id, done)) return FOUND_TASK_AND_MARKED_AS_DONE;
         }
         return TASK_NOT_FOUND;
     }

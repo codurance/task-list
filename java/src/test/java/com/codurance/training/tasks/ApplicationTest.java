@@ -1,5 +1,8 @@
 package com.codurance.training.tasks;
 
+import com.codurance.training.tasks.domain.TaskList;
+import com.codurance.training.tasks.io.Keyboard;
+import com.codurance.training.tasks.io.Screen;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

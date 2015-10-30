@@ -1,4 +1,4 @@
-package com.codurance.training.tasks;
+package com.codurance.training.tasks.domain;
 
 public class Project {
     private final String name;

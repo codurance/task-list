@@ -1,5 +1,7 @@
 package com.codurance.training.tasks;
 
+import com.codurance.training.tasks.io.Keyboard;
+import com.codurance.training.tasks.io.Screen;
 import org.hamcrest.Matchers;
 
 import java.io.IOException;

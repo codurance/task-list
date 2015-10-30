@@ -1,9 +1,9 @@
-package com.codurance.training.tasks;
+package com.codurance.training.tasks.domain;
+
+import com.codurance.training.tasks.io.Screen;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static com.codurance.training.tasks.Tasks.NO_TASKS;
 
 public class ProjectsToTasks {
 
@@ -25,13 +25,13 @@ public class ProjectsToTasks {
         projectsToTasksMapper.put(project, tasks);
     }
 
-    public void addTask(long nextTaskId, Project project, String taskDescription) {
+    public void addTask(Project project, String taskDescription) {
         Tasks projectTasks = getTasksFor(project);
-        if (projectTasks == NO_TASKS) {
+        if (projectTasks == Tasks.NO_TASKS) {
             out.printf(COULD_NOT_FIND_A_PROJECT, project);
             out.println();
         } else {
-            projectTasks.add(new Task(nextTaskId, taskDescription));
+            projectTasks.add(new Task(taskDescription));
         }
     }
 

@@ -1,16 +1,19 @@
-package com.codurance.training.tasks;
+package com.codurance.training.tasks.command;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Command {
 
-    public static final Command CMD_QUIT = new Command("quit");
-    public static final Command CMD_SHOW = new Command("show");
-    public static final Command CMD_ADD = new Command("add");
-    public static final Command CMD_CHECK = new Command("check");
-    public static final Command CMD_UNCHECK = new Command("uncheck");
-    public static final Command CMD_HELP = new Command("help");
+    public static final String CMD_QUIT = "quit";
+    public static final String CMD_SHOW = "show";
+    public static final String CMD_ADD = "add";
+    public static final String CMD_CHECK = "check";
+    public static final String CMD_UNCHECK = "uncheck";
+    public static final String CMD_HELP = "help";
+
+    public static final String SUB_CMD_PROJECT = "project";
+    public static final String SUB_CMD_TASK = "task";
 
     private String name;
 
@@ -43,7 +46,5 @@ public class Command {
         return name;
     }
 
-    public boolean contains(String value) {
-        return name.equals(value);
-    }
+    public void execute(CommandLine... subCommandLine) {}
 }
