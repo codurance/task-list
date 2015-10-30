@@ -1,16 +1,16 @@
 package com.codurance.training.tasks;
 
-import com.codurance.training.tasks.command.Command;
+import com.codurance.training.tasks.command.ExecutableCommand;
 import com.codurance.training.tasks.command.CommandLine;
 import com.codurance.training.tasks.domain.Project;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.io.Screen;
 
-public class TaskListAddTaskCommand implements Command {
+public class TaskListAddTaskExecutableCommand implements ExecutableCommand {
     private Screen screen;
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListAddTaskCommand(Screen screen, ProjectsToTasks projectsToTasks) {
+    public TaskListAddTaskExecutableCommand(Screen screen, ProjectsToTasks projectsToTasks) {
         this.screen = screen;
         this.projectsToTasks = projectsToTasks;
     }

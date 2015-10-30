@@ -3,11 +3,11 @@ package com.codurance.training.tasks.command;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.io.Screen;
 
-public class TaskListAddCommand implements Command {
+public class TaskListAddExecutableCommand implements ExecutableCommand {
     private Screen screen;
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListAddCommand(Screen screen, ProjectsToTasks projectsToTasks) {
+    public TaskListAddExecutableCommand(Screen screen, ProjectsToTasks projectsToTasks) {
         this.screen = screen;
         this.projectsToTasks = projectsToTasks;
     }
@@ -16,7 +16,7 @@ public class TaskListAddCommand implements Command {
     public void execute(CommandLine commandLine) {
         CommandLine subCommandLine = new CommandLine(commandLine.getRestOfParameters(), screen, projectsToTasks);
 
-        Command command = subCommandLine.getCommand();
-        command.execute(subCommandLine);
+        ExecutableCommand executableCommand = (ExecutableCommand) subCommandLine.getCommand();
+        executableCommand.execute(subCommandLine);
     }
 }

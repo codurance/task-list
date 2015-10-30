@@ -4,11 +4,11 @@ import com.codurance.training.tasks.domain.ProjectsToTasks;
 
 import static com.codurance.training.tasks.domain.Task.NOT_DONE;
 
-public class TaskListUnCheckCommand implements Command {
+public class TaskListUnCheckExecutableCommand implements ExecutableCommand {
 
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListUnCheckCommand(ProjectsToTasks projectsToTasks) {
+    public TaskListUnCheckExecutableCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 

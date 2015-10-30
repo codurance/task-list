@@ -1,6 +1,6 @@
 package com.codurance.training.tasks.command;
 
-public interface Command {
+public interface ExecutableCommand extends NonExecutableCommand {
 
     String CMD_QUIT = "quit";
     String CMD_SHOW = "show";

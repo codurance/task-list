@@ -1,6 +1,6 @@
 package com.codurance.training.tasks.command;
 
-import com.codurance.training.tasks.TaskListAddTaskCommand;
+import com.codurance.training.tasks.TaskListAddTaskExecutableCommand;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.io.Screen;
 
@@ -13,7 +13,7 @@ public class CommandLine {
     private static final int COMMAND_FIRST_PARAMETER = 1;
     private static final int REST_OF_THE_PARAMETERS = 1;
 
-    private static final int SUBCOMMAND_FIRST_PARAMETER = 0;
+    private static final int SUB_COMMAND_FIRST_PARAMETER = 0;
 
     private static final String NOTHING = "";
 
@@ -27,35 +27,35 @@ public class CommandLine {
         this.projectsToTasks = projectsToTasks;
     }
 
-    public Command getCommand() {
+    public NonExecutableCommand getCommand() {
         String[] commandLineSplit = parseCommandLine();
 
         String commandName = commandLineSplit[COMMAND];
         switch (commandName) {
-            case Command.CMD_SHOW:
-                return new TaskListShowCommand(projectsToTasks);
-            case Command.CMD_ADD:
-                return new TaskListAddCommand(screen, projectsToTasks);
-            case Command.SUB_CMD_PROJECT:
-                return new TaskListAddProjectCommand(projectsToTasks);
-            case Command.SUB_CMD_TASK:
-                return new TaskListAddTaskCommand(screen, projectsToTasks);
-            case Command.CMD_UNCHECK:
-                return new TaskListUnCheckCommand(projectsToTasks);
-            case Command.CMD_CHECK:
-                return new TaskListCheckCommand(projectsToTasks);
-            case Command.CMD_HELP:
-                return new HelpCommand(screen);
-            case Command.CMD_QUIT:
+            case ExecutableCommand.CMD_SHOW:
+                return new TaskListShowExecutableCommand(projectsToTasks);
+            case ExecutableCommand.CMD_ADD:
+                return new TaskListAddExecutableCommand(screen, projectsToTasks);
+            case ExecutableCommand.SUB_CMD_PROJECT:
+                return new TaskListAddProjectExecutableCommand(projectsToTasks);
+            case ExecutableCommand.SUB_CMD_TASK:
+                return new TaskListAddTaskExecutableCommand(screen, projectsToTasks);
+            case ExecutableCommand.CMD_UNCHECK:
+                return new TaskListUnCheckExecutableCommand(projectsToTasks);
+            case ExecutableCommand.CMD_CHECK:
+                return new TaskListCheckExecutableCommand(projectsToTasks);
+            case ExecutableCommand.CMD_HELP:
+                return new HelpExecutableCommand(screen);
+            case ExecutableCommand.CMD_QUIT:
                 return new QuitCommand();
-
         }
+
         return new UnknownCommand(commandName);
     }
 
     public String getFirstParameter() {
         String parameters[] = parseCommandLineFor(COMMAND_FIRST_PARAMETER).split(COMMAND_SEPARATOR);
-        return parameters[SUBCOMMAND_FIRST_PARAMETER];
+        return parameters[SUB_COMMAND_FIRST_PARAMETER];
     }
 
     private String parseCommandLineFor(int index) {

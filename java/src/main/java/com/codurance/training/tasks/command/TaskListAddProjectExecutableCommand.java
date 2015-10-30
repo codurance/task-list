@@ -4,11 +4,11 @@ import com.codurance.training.tasks.domain.Project;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.domain.Tasks;
 
-public class TaskListAddProjectCommand implements Command {
+public class TaskListAddProjectExecutableCommand implements ExecutableCommand {
 
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListAddProjectCommand(ProjectsToTasks projectsToTasks) {
+    public TaskListAddProjectExecutableCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 
@@ -16,5 +16,4 @@ public class TaskListAddProjectCommand implements Command {
         Project project = new Project(commandLine.getFirstParameter());
         projectsToTasks.add(project, new Tasks());
     }
-
 }

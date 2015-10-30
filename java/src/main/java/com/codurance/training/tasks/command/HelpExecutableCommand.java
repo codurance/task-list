@@ -2,11 +2,11 @@ package com.codurance.training.tasks.command;
 
 import com.codurance.training.tasks.io.Screen;
 
-public class HelpCommand implements Command {
+public class HelpExecutableCommand implements ExecutableCommand {
 
     private final Screen screen;
 
-    public HelpCommand(Screen screen) {
+    public HelpExecutableCommand(Screen screen) {
         this.screen = screen;
     }
 

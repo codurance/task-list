@@ -6,7 +6,7 @@ import com.codurance.training.tasks.io.Screen;
 
 import java.io.IOException;
 
-import static com.codurance.training.tasks.command.Command.*;
+import static com.codurance.training.tasks.command.ExecutableCommand.*;
 
 public final class TaskList implements Runnable {
     private static final String COMMAND_PROMPT = "> ";
@@ -49,15 +49,15 @@ public final class TaskList implements Runnable {
     }
 
     private void execute(CommandLine commandLine) {
-        Command command = commandLine.getCommand();
+        NonExecutableCommand executableCommand = commandLine.getCommand();
 
-        if (command instanceof TaskListShowCommand ||
-                command instanceof TaskListAddCommand ||
-                command instanceof TaskListCheckCommand ||
-                command instanceof TaskListUnCheckCommand)
-            command.execute(commandLine);
-        else if (command instanceof QuitCommand) return;
-        else if (command instanceof HelpCommand) new HelpCommand(screen).execute(commandLine);
-        else new ErrorCommand(screen).execute(commandLine);
+        if (executableCommand instanceof ExecutableCommand) {
+            ((ExecutableCommand) executableCommand).execute(commandLine);
+        } else {
+            if (executableCommand instanceof QuitCommand)
+                return;
+            else
+                new ErrorExecutableCommand(screen).execute(commandLine);
+        }
     }
 }

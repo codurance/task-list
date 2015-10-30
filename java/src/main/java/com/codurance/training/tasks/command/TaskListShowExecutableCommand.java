@@ -2,10 +2,10 @@ package com.codurance.training.tasks.command;
 
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 
-public class TaskListShowCommand implements Command {
+public class TaskListShowExecutableCommand implements ExecutableCommand {
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListShowCommand(ProjectsToTasks projectsToTasks) {
+    public TaskListShowExecutableCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 

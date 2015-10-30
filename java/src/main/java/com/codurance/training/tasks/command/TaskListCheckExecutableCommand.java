@@ -3,11 +3,11 @@ package com.codurance.training.tasks.command;
 import com.codurance.training.tasks.domain.ProjectsToTasks;
 import com.codurance.training.tasks.domain.Task;
 
-public class TaskListCheckCommand implements Command {
+public class TaskListCheckExecutableCommand implements ExecutableCommand {
 
     private final ProjectsToTasks projectsToTasks;
 
-    public TaskListCheckCommand(ProjectsToTasks projectsToTasks) {
+    public TaskListCheckExecutableCommand(ProjectsToTasks projectsToTasks) {
         this.projectsToTasks = projectsToTasks;
     }
 
