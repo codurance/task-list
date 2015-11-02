@@ -6,7 +6,7 @@ A *primitive* is any concept technical in nature, and not relevant to your busin
 
 ## Exercise
 
-Try implementing the following features, refactoring primitives away as you go. Try not to implement any new behaviour until the code you're about to change has been completely refactored to remove primitives.
+Try implementing the following features, refactoring primitives away as you go. Try not to implement any new behaviour until the code you're about to change has been completely refactored to remove primitives, i.e. **_Only refactor the code you're about to change, then make your change. Don't refactor unrelated code._**
 
 One set of criteria to identify when primitives have been removed is to only allow primitives in constructor parameter lists, and as local variables and private fields. They shouldn't be passed into methods or returned from methods. The only exception is true infrastructure code—code that communicates with the terminal, the network, the database, etc. Infrastructure requires serialisation to primitives, but should be treated as a special case. You could even consider your infrastructure as a separate domain, technical in nature, in which primitives *are* the domain.
 
