@@ -7,7 +7,7 @@ require_relative '../lib/task_list'
 describe 'application' do
   PROMPT = '> '
 
-  before do
+  around :each do |example|
     @input_reader, @input_writer = IO.pipe
     @output_reader, @output_writer = IO.pipe
 
@@ -16,22 +16,19 @@ describe 'application' do
       application.run
     end
     @application_thread.abort_on_exception = true
+
+    example.run
+
+    @input_reader.close
+    @input_writer.close
+    @output_reader.close
+    @output_writer.close
   end
 
-  after do
-    begin
-      if @application_thread.nil? || !@application_thread.alive?
-        next
-      else
-        @application_thread.kill
-        raise 'The application is still running.'
-      end
-    ensure
-      @input_reader.close
-      @input_writer.close
-      @output_reader.close
-      @output_writer.close
-    end
+  after :each do
+    next unless still_running?
+    @application_thread.kill
+    raise 'The application is still running.'
   end
 
   it 'works' do
@@ -101,5 +98,9 @@ describe 'application' do
 
   def write(input)
     @input_writer.puts input
+  end
+
+  def still_running?
+    @application_thread && @application_thread.alive?
   end
 end
