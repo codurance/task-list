@@ -27,6 +27,8 @@ describe 'application' do
 
   after :each do
     next unless still_running?
+    sleep 1
+    next unless still_running?
     @application_thread.kill
     raise 'The application is still running.'
   end
