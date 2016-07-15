@@ -38,7 +38,12 @@ public final class ApplicationTest {
 
     @After public void
     kill_the_application() throws IOException, InterruptedException {
-        if (applicationThread == null || !applicationThread.isAlive()) {
+        if (!stillRunning()) {
+            return;
+        }
+
+        Thread.sleep(1000);
+        if (!stillRunning()) {
             return;
         }
 
@@ -114,5 +119,9 @@ public final class ApplicationTest {
 
     private void write(String input) {
         inWriter.println(input);
+    }
+
+    private boolean stillRunning() {
+        return applicationThread != null && applicationThread.isAlive();
     }
 }
