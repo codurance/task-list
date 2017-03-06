@@ -26,8 +26,11 @@ class TestCtxt
     constructor(public test: nodeunit.Test){
         var count = 0;
         this.output.on('readable', () => {
-            if(count >= this.expectations.length) {
+            if(count > this.expectations.length) {
                 this.test.ok(false, "Got more output than expected proabably didn't quit")
+                this.test.done();
+            } else if(count == this.expectations.length) {
+                this.test.ok(true);
                 this.test.done();
             } else if(this.expectations[count].test()) {
                 count += 1;
