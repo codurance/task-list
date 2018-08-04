@@ -5,11 +5,9 @@ class Console:
         self.input_reader = input_reader
         self.output_writer = output_writer
 
-    def print(self, string="", end="\n"):
-        self.output_writer.write(string + end)
+    def print(self, string="", end="\n", flush=True):
+        self.output_writer(string, end=end, flush=flush)
 
     def input(self, prompt=""):
-        self.output_writer.write(prompt)
-        self.output_writer.flush()
-        return self.input_reader.readline().strip()
+        return self.input_reader(prompt)
 

@@ -1,5 +1,3 @@
-from typing import List, Dict
-
 from python.task_list.task import Task
 
 
@@ -9,7 +7,7 @@ class TaskList:
     def __init__(self, console):
         self.last_id = 0
         self.console = console
-        self.tasks: Dict[str, List[Task]] = dict()
+        self.tasks = dict()
 
     def run(self):
         while True:
