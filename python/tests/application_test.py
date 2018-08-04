@@ -7,10 +7,9 @@ class ApplicationTest(unittest.TestCase):
 
     def setUp(self):
         self.proc = subprocess.Popen(
-            ["python", "-m", "task_list"],
+            ["python", "-m", "python.task_list"],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
             universal_newlines=True)
-        self.output = None
 
     def tearDown(self):
         self.proc.stdout.close()
@@ -25,7 +24,7 @@ class ApplicationTest(unittest.TestCase):
         self.execute("add task secrets Destroy all humans.")
         self.execute("show")
 
-        self.readline(
+        self.read_lines(
             "secrets",
             "  [ ] 1: Eat more donuts.",
             "  [ ] 2: Destroy all humans.",
@@ -45,10 +44,11 @@ class ApplicationTest(unittest.TestCase):
         self.execute("check 6")
         self.execute("show")
 
-        self.readline(
+        self.read_lines(
             "secrets",
             "  [x] 1: Eat more donuts.",
             "  [ ] 2: Destroy all humans.",
+            "",
             "training",
             "  [x] 3: Four Elements of Simple Design",
             "  [ ] 4: SOLID",
@@ -68,10 +68,10 @@ class ApplicationTest(unittest.TestCase):
         self.proc.stdin.write(command)
         self.proc.stdin.flush()
 
-    def read(self, line):
-        output = self.proc.stdout.read(len(line))
-        self.assertEqual(line, output)
+    def read(self, expected_output):
+        output = self.proc.stdout.read(len(expected_output))
+        self.assertEqual(expected_output, output)
 
-    def readline(self, *args):
-        for line in args:
+    def read_lines(self, *lines):
+        for line in lines:
             self.read(line + "\n")
