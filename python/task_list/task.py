@@ -11,3 +11,4 @@ class Task:
 
     def is_done(self) -> bool:
         return self.done
+
