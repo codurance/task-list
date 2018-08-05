@@ -1,17 +1,22 @@
 import subprocess
 import unittest
+from threading import Timer
 
 
 class ApplicationTest(unittest.TestCase):
     PROMPT = "> "
+    TIMEOUT = 2
 
     def setUp(self):
         self.proc = subprocess.Popen(
-            ["python", "-m", "python.task_list"],
+            ["python", "-m", "task_list"],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
             universal_newlines=True)
+        self.timer = Timer(self.TIMEOUT, self.proc.kill)
+        self.timer.start()
 
     def tearDown(self):
+        self.timer.cancel()
         self.proc.stdout.close()
         self.proc.stdin.close()
         while self.proc.returncode is None:
