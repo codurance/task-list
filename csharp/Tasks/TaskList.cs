@@ -8,7 +8,6 @@ namespace Tasks
 	{
 		private const string Quit = "quit";
 
-		private readonly IDictionary<string, IList<Task>> _tasks;
 		private readonly IConsole _console;
 
         private readonly ProjectList _projectList;
@@ -17,9 +16,8 @@ namespace Tasks
 
 		public TaskList(IConsole console, IDictionary<string, IList<Task>> tasksRepository)
         {
-            _tasks = tasksRepository;
 			_console = console;
-			_projectList = new ProjectList(_tasks);
+			_projectList = new ProjectList(tasksRepository);
 		}
 
         private void RunOnce()
@@ -85,14 +83,11 @@ namespace Tasks
 			}
 		}
 
-		private void AddProject(string name)
-		{
-			_tasks[name] = new List<Task>();
-		}
+        private void AddProject(string name) => _projectList.Add(name);
 
 		private void AddTask(string project, string description)
-		{
-			IList<Task> projectTasks = _tasks[project];
+        {
+            var projectTasks = _projectList.FindProject(project);
 			if (projectTasks == null) {
 				Console.WriteLine("Could not find a project with the name \"{0}\".", project);
 				return;
@@ -113,9 +108,10 @@ namespace Tasks
 		private void SetDone(string idString, bool done)
 		{
 			var id = int.Parse(idString);
-			var identifiedTask = _tasks
-                .Select(project => project.Value.FirstOrDefault(task => task.Id == id))
-                .FirstOrDefault(task => task != null);
+
+			var identifiedTask = _projectList.AllTasksInProjects()
+                .FirstOrDefault(task => task.Id == id);
+
 			if (identifiedTask == null) {
 				_console.WriteLine("Could not find a task with an ID of {0}.", id);
 				return;

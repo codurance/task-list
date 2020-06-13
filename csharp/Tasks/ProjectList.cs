@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Tasks
 {
     internal class ProjectList
     {
-        private IDictionary<string, IList<Task>> _tasks;
+        private readonly IDictionary<string, IList<Task>> _tasks;
 
         public ProjectList(IDictionary<string, IList<Task>> tasks)
         {
-            this._tasks = tasks;
+            _tasks = tasks;
         }
 
         public string Show()
         {
             var builder = new StringBuilder();
-            foreach (var project in _tasks)
+            foreach (var (key, value) in _tasks)
             {
-                builder.AppendLine(project.Key);
-                foreach (var task in project.Value)
+                builder.AppendLine(key);
+                foreach (var task in value)
                 {
-                    var format = string.Format("    [{0}] {1}: {2}", (task.Done ? 'x' : ' '), task.Id, task.Description);
+                    var format = $"    [{(task.Done ? 'x' : ' ')}] {task.Id}: {task.Description}";
                     builder.AppendLine(format);
                 }
                 builder.AppendLine();
@@ -28,5 +29,14 @@ namespace Tasks
 
             return builder.ToString();
         }
+
+        public void Add(string projectName)
+        {
+            _tasks[projectName] = new List<Task>();
+        }
+
+        public IList<Task> FindProject(string projectName) => _tasks[projectName];
+
+        public IEnumerable<Task> AllTasksInProjects() => _tasks.Values.SelectMany(list => list);
     }
 }
