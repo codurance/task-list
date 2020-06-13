@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,20 +8,20 @@ namespace Tasks.Tests
 	[TestClass]
 	public sealed class ApplicationTest
 	{
-		public const string PROMPT = "> ";
+		public const string Prompt = "> ";
 
-		private FakeConsole console;
+		private FakeConsole _console;
         private CancellationTokenSource _cancellationTokenSource;
-		private System.Threading.Tasks.Task applicationTask;
+		private System.Threading.Tasks.Task _applicationTask;
 
 		[TestInitialize]
 		public void StartTheApplication()
 		{
-			this.console = new FakeConsole();
-			var taskList = new TaskList(console);
+			this._console = new FakeConsole();
+			var taskList = new TaskList(_console, new Dictionary<string, IList<Task>>());
 
 			_cancellationTokenSource = new CancellationTokenSource();
-            applicationTask = System.Threading.Tasks.Task.Run(() => taskList.Run(), _cancellationTokenSource.Token);
+            _applicationTask = System.Threading.Tasks.Task.Run(() => taskList.Run(), _cancellationTokenSource.Token);
         }
 
 		[TestCleanup]
@@ -29,7 +30,7 @@ namespace Tasks.Tests
             try
             {
                 _cancellationTokenSource.Cancel();
-                System.Threading.Tasks.Task.WaitAll(new[] {applicationTask}, _cancellationTokenSource.Token);
+                System.Threading.Tasks.Task.WaitAll(new[] {_applicationTask}, _cancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -88,14 +89,14 @@ namespace Tasks.Tests
 
 		private void Execute(string command)
 		{
-			Read(PROMPT);
+			Read(Prompt);
 			Write(command);
 		}
 
 		private void Read(string expectedOutput)
 		{
 			var length = expectedOutput.Length;
-			var actualOutput = console.RetrieveOutput(length);
+			var actualOutput = _console.RetrieveOutput(length);
 			Assert.AreEqual(expectedOutput, actualOutput);
 		}
 
@@ -109,7 +110,7 @@ namespace Tasks.Tests
 
 		private void Write(string input)
 		{
-			console.SendInput(input + Environment.NewLine);
+			_console.SendInput(input + Environment.NewLine);
 		}
 	}
 }

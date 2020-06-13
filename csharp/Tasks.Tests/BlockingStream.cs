@@ -64,9 +64,12 @@ namespace Tasks.Tests
 		public override bool CanRead
 		{
 			get
-			{
-				return _underlyingStream.CanRead;
-			}
+            {
+                lock (_underlyingStream)
+                {
+                    return _underlyingStream.CanRead;
+                }
+            }
 		}
 
 		public override bool CanSeek

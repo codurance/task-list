@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Tasks
+﻿namespace Tasks
 {
 	public interface IConsole
 	{
