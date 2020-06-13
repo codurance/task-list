@@ -3,13 +3,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ApplicationIcon />
     <OutputType>Exe</OutputType>
-    <StartupObject>Tasks</StartupObject>
+    <StartupObject>Tasks.TaskList</StartupObject>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OxaControle.Domain\OxaControle.Domain.csproj" />
-    <ProjectReference Include="..\OxaControle.ModBusClient\OxaControle.ModBusClient.csproj" />
-    <ProjectReference Include="..\OxaControle.PhysicalInterface\OxaControle.DeBus.csproj" />
-  </ItemGroup>
-
 </Project>
