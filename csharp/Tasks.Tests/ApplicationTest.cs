@@ -45,6 +45,16 @@ namespace Tasks.Tests
 			ReadLines();
         }
 
+        [TestMethod]
+        public void Après_Ajout_D_Un_Projet_Show_Renvoie_Son_Nom()
+        {
+            Execute("add project secrets");
+
+            Execute("show");
+
+            ReadLines("secrets");
+		}
+
 		[TestMethod]
 		public void ItWorks()
 		{

@@ -11,12 +11,15 @@ namespace Tasks
 		private readonly IDictionary<string, IList<Task>> _tasks;
 		private readonly IConsole _console;
 
+        private readonly ProjectList _projectList;
+
 		private long _lastId;
 
 		public TaskList(IConsole console, IDictionary<string, IList<Task>> tasksRepository)
         {
             _tasks = tasksRepository;
 			_console = console;
+			_projectList = new ProjectList();
 		}
 
         private void RunOnce()
@@ -67,6 +70,8 @@ namespace Tasks
 
 		private void Show()
 		{
+			_console.Write(_projectList.Show());
+
 			foreach (var project in _tasks) {
 				_console.WriteLine(project.Key);
 				foreach (var task in project.Value) {
