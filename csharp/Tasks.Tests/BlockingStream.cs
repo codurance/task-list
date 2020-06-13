@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 
-namespace Tasks
+namespace Tasks.Tests
 {
 	public class BlockingStream : Stream
 	{

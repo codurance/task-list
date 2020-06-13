@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Tasks
+namespace Tasks.Tests
 {
 	public class FakeConsole : IConsole
 	{

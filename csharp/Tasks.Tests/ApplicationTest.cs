@@ -103,13 +103,13 @@ namespace Tasks.Tests
 		{
 			foreach (var line in expectedOutput)
 			{
-				Read(line + "\n");
+				Read(line + Environment.NewLine);
 			}
 		}
 
 		private void Write(string input)
 		{
-			console.SendInput(input + "\n");
+			console.SendInput(input + Environment.NewLine);
 		}
 	}
 }

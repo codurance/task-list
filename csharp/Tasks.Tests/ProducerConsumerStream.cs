@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Tasks
+namespace Tasks.Tests
 {
 	class ProducerConsumerStream : Stream
 	{
