@@ -39,6 +39,13 @@ namespace Tasks.Tests
 		}
 
 		[TestMethod]
+		public void Show_Ne_Renvoi_Rien_Initialement()
+        {
+			Execute("show");
+			ReadLines();
+        }
+
+		[TestMethod]
 		public void ItWorks()
 		{
 			Execute("show");
