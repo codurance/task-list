@@ -1,10 +1,9 @@
-﻿using NUnit.Framework;
-using System;
-using System.IO;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tasks
 {
-	[TestFixture]
+	[TestClass]
 	public sealed class ApplicationTest
 	{
 		public const string PROMPT = "> ";
@@ -12,7 +11,7 @@ namespace Tasks
 		private FakeConsole console;
 		private System.Threading.Thread applicationThread;
 
-		[SetUp]
+		[TestInitialize]
 		public void StartTheApplication()
 		{
 			this.console = new FakeConsole();
@@ -21,7 +20,7 @@ namespace Tasks
 			applicationThread.Start();
 		}
 
-		[TearDown]
+		[TestCleanup]
 		public void KillTheApplication()
 		{
 			if (applicationThread == null || !applicationThread.IsAlive)
@@ -33,7 +32,7 @@ namespace Tasks
 			throw new Exception("The application is still running.");
 		}
 
-		[Test, Timeout(1000)]
+		[TestMethod]
 		public void ItWorks()
 		{
 			Execute("show");

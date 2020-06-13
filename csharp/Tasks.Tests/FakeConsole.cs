@@ -1,59 +1,55 @@
-using NUnit.Framework;
-using System;
 using System.IO;
-using System.IO.Pipes;
-using System.Threading;
 
 namespace Tasks
 {
 	public class FakeConsole : IConsole
 	{
-		private readonly TextReader inputReader;
-		private readonly TextWriter inputWriter;
+		private readonly TextReader _inputReader;
+		private readonly TextWriter _inputWriter;
 
-		private readonly TextReader outputReader;
-		private readonly TextWriter outputWriter;
+		private readonly TextReader _outputReader;
+		private readonly TextWriter _outputWriter;
 
 		public FakeConsole() 
 		{
 			Stream inputStream = new BlockingStream(new ProducerConsumerStream());
-			this.inputReader = new StreamReader(inputStream);
-			this.inputWriter = new StreamWriter(inputStream) { AutoFlush = true };
+			this._inputReader = new StreamReader(inputStream);
+			this._inputWriter = new StreamWriter(inputStream) { AutoFlush = true };
 
 			Stream outputStream = new BlockingStream(new ProducerConsumerStream());
-			this.outputReader = new StreamReader(outputStream);
-			this.outputWriter = new StreamWriter(outputStream) { AutoFlush = true };
+			this._outputReader = new StreamReader(outputStream);
+			this._outputWriter = new StreamWriter(outputStream) { AutoFlush = true };
 		}
 
 		public string ReadLine()
 		{
-			return inputReader.ReadLine();
+			return _inputReader.ReadLine();
 		}
 
 		public void Write(string format, params object[] args)
 		{
-			outputWriter.Write(format, args);
+			_outputWriter.Write(format, args);
 		}
 
 		public void WriteLine(string format, params object[] args)
 		{
-			outputWriter.WriteLine(format, args);
+			_outputWriter.WriteLine(format, args);
 		}
 
 		public void WriteLine()
 		{
-			outputWriter.WriteLine();
+			_outputWriter.WriteLine();
 		}
 
 		public void SendInput(string input)
 		{
-			inputWriter.Write(input);
+			_inputWriter.Write(input);
 		}
 
 		public string RetrieveOutput(int length)
 		{
 			var buffer = new char[length];
-			outputReader.ReadBlock(buffer, 0, length);
+			_outputReader.ReadBlock(buffer, 0, length);
 			return new string(buffer);
 		}
 	}

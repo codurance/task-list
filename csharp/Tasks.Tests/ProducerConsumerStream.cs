@@ -5,66 +5,66 @@ namespace Tasks
 {
 	class ProducerConsumerStream : Stream
 	{
-		private readonly MemoryStream underlyingStream;
-		private long readPosition = 0;
-		private long writePosition = 0;
+		private readonly MemoryStream _underlyingStream;
+		private long _readPosition;
+		private long _writePosition;
 
 		public ProducerConsumerStream()
 		{
-			this.underlyingStream = new MemoryStream();
+			this._underlyingStream = new MemoryStream();
 		}
 
 		public override void Flush()
 		{
-			lock (underlyingStream)
+			lock (_underlyingStream)
 			{
-				underlyingStream.Flush();
+				_underlyingStream.Flush();
 			}
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			lock (underlyingStream)
+			lock (_underlyingStream)
 			{
-				underlyingStream.Position = readPosition;
-				int read = underlyingStream.Read(buffer, offset, count);
-				readPosition = underlyingStream.Position;
+				_underlyingStream.Position = _readPosition;
+				int read = _underlyingStream.Read(buffer, offset, count);
+				_readPosition = _underlyingStream.Position;
 				return read;
 			}
 		}
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
-			lock (underlyingStream)
+			lock (_underlyingStream)
 			{
-				underlyingStream.Position = writePosition;
-				underlyingStream.Write(buffer, offset, count);
-				writePosition = underlyingStream.Position;
+				_underlyingStream.Position = _writePosition;
+				_underlyingStream.Write(buffer, offset, count);
+				_writePosition = _underlyingStream.Position;
 			}
 		}
 
-		public override bool CanRead { get { return true; } }
+		public override bool CanRead => true;
 
-		public override bool CanSeek { get { return false; } }
+        public override bool CanSeek => false;
 
-		public override bool CanWrite { get { return true; } }
+        public override bool CanWrite => true;
 
-		public override long Length
+        public override long Length
 		{
 			get
 			{
-				lock (underlyingStream)
+				lock (_underlyingStream)
 				{
-					return underlyingStream.Length;
+					return _underlyingStream.Length;
 				}
 			}
 		}
 
 		public override long Position
 		{
-			get { throw new NotSupportedException(); }
-			set { throw new NotSupportedException(); }
-		}
+			get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
