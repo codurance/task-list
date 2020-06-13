@@ -91,7 +91,7 @@ namespace Tasks
 		private void Read(string expectedOutput)
 		{
 			var length = expectedOutput.Length;
-			var actualOutput = console.RetrieveOutput(expectedOutput.Length);
+			var actualOutput = console.RetrieveOutput(length);
 			Assert.AreEqual(expectedOutput, actualOutput);
 		}
 
