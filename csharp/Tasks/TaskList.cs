@@ -19,7 +19,7 @@ namespace Tasks
         {
             _tasks = tasksRepository;
 			_console = console;
-			_projectList = new ProjectList();
+			_projectList = new ProjectList(_tasks);
 		}
 
         private void RunOnce()
@@ -71,14 +71,6 @@ namespace Tasks
 		private void Show()
 		{
 			_console.Write(_projectList.Show());
-
-			foreach (var project in _tasks) {
-				_console.WriteLine(project.Key);
-				foreach (var task in project.Value) {
-					_console.WriteLine("    [{0}] {1}: {2}", (task.Done ? 'x' : ' '), task.Id, task.Description);
-				}
-				_console.WriteLine();
-			}
 		}
 
 		private void Add(string commandLine)
