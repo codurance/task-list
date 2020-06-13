@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tasks
+namespace Tasks.Tests
 {
 	[TestClass]
 	public sealed class ApplicationTest
@@ -9,27 +10,31 @@ namespace Tasks
 		public const string PROMPT = "> ";
 
 		private FakeConsole console;
-		private System.Threading.Thread applicationThread;
+        private CancellationTokenSource _cancellationTokenSource;
+		private System.Threading.Tasks.Task applicationTask;
 
 		[TestInitialize]
 		public void StartTheApplication()
 		{
 			this.console = new FakeConsole();
 			var taskList = new TaskList(console);
-			this.applicationThread = new System.Threading.Thread(() => taskList.Run());
-			applicationThread.Start();
-		}
+
+			_cancellationTokenSource = new CancellationTokenSource();
+            applicationTask = System.Threading.Tasks.Task.Run(() => taskList.Run(), _cancellationTokenSource.Token);
+        }
 
 		[TestCleanup]
 		public void KillTheApplication()
 		{
-			if (applicationThread == null || !applicationThread.IsAlive)
-			{
-				return;
-			}
-
-			applicationThread.Abort();
-			throw new Exception("The application is still running.");
+            try
+            {
+                _cancellationTokenSource.Cancel();
+                System.Threading.Tasks.Task.WaitAll(new[] {applicationTask}, _cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+				//ignore
+            }
 		}
 
 		[TestMethod]
