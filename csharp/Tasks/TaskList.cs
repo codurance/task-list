@@ -91,8 +91,8 @@ namespace Tasks
 
 		private void AddTask(string project, string description)
 		{
-			IList<Task> projectTasks = tasks[project];
-			if (projectTasks == null) {
+			if (!tasks.TryGetValue(project, out IList<Task> projectTasks))
+			{
 				Console.WriteLine("Could not find a project with the name \"{0}\".", project);
 				return;
 			}
