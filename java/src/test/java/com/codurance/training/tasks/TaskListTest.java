@@ -128,6 +128,47 @@ class TaskListTest {
             //Then
             assertThat(taskList.tasks.get("test").get(0).isDone()).isFalse();
         }
+
+        @Test
+        public void displayErrorMessage_whenTheTaskIdIsNotFound() {
+            //Given
+            taskList.tasks.put("test", List.of(new Task(1L, "description", true)));
+
+            String projectCreationCommand = "uncheck 99";
+
+            //When
+            taskList.execute(projectCreationCommand);
+
+            //Then
+            assertThat(taskList.tasks.get("test").get(0).isDone()).isTrue();
+            verify(out).printf(
+                    "Could not find a task with an ID of %d.",
+                    99
+            );
+        }
+    }
+
+    @DisplayName("Help command")
+    @Nested
+    class helpCommand {
+        @Test
+        public void showAllCommandsAvailable_whenHelpCommandIsTyped() {
+            //Given
+            taskList.tasks.put("test", List.of(new Task(1L, "description", true)));
+
+            String projectCreationCommand = "help";
+
+            //When
+            taskList.execute(projectCreationCommand);
+
+            //Then
+            verify(out).println("Commands:");
+            verify(out).println("  show");
+            verify(out).println("  add project <project name>");
+            verify(out).println("  add task <project name> <task description>");
+            verify(out).println("  uncheck <task ID>");
+            verify(out).println("  check <task ID>");
+        }
     }
 
 
