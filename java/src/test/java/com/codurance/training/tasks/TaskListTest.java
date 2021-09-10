@@ -171,6 +171,26 @@ class TaskListTest {
         }
     }
 
+    @DisplayName("Error message when command is unknown")
+    @Nested
+    class errorMessage {
+        @Test
+        public void displayErrorMessage_whenAnUnknownCommandIsTyped() {
+            //Given
+
+            String projectCreationCommand = "unknownCommand";
+
+            //When
+            taskList.execute(projectCreationCommand);
+
+            //Then
+            verify(out).printf(
+                    "I don't know what the command \"%s\" is.",
+                    "unknownCommand"
+            );
+        }
+    }
+
 
 
 }
