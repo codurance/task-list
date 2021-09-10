@@ -7,14 +7,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskListTest {
@@ -191,6 +193,33 @@ class TaskListTest {
         }
     }
 
+    @DisplayName("run the application")
+    @Nested
+    class Run {
+        @Test
+        public void runApplication() throws IOException {
+            //Given
+            when(in.readLine())
+                    .thenReturn("unknownCommand")
+                    .thenReturn("quit");
+            //When
+            taskList.run();
 
+            //Then
+            verify(out).printf(
+                    "I don't know what the command \"%s\" is.",
+                    "unknownCommand"
+            );
+        }
 
+        @Test
+        public void throwException_whenSomethingGoesWrongWithInputAndOutput() throws IOException {
+            //Given
+            when(in.readLine()).thenThrow(IOException.class);
+            //When & Then
+            assertThatThrownBy(() -> taskList.run())
+                    .isInstanceOf(RuntimeException.class)
+                    .hasMessage("java.io.IOException");
+        }
+    }
 }
