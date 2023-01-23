@@ -1,4 +1,4 @@
-package com.codurance.training.tasksSolid;
+package com.codurance.training.tasksSolid.manager;
 
 import java.io.BufferedReader;
 import java.io.IOException;

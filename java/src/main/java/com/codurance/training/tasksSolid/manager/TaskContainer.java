@@ -1,4 +1,4 @@
-package com.codurance.training.tasksSolid;
+package com.codurance.training.tasksSolid.manager;
 
 import java.util.LinkedHashMap;
 import java.util.List;

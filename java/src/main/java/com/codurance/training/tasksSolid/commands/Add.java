@@ -1,7 +1,7 @@
 package com.codurance.training.tasksSolid.commands;
 
-import com.codurance.training.tasksSolid.Task;
-import com.codurance.training.tasksSolid.TaskContainer;
+import com.codurance.training.tasksSolid.manager.Task;
+import com.codurance.training.tasksSolid.manager.TaskContainer;
 
 import java.util.ArrayList;
 

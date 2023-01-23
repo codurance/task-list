@@ -1,4 +1,4 @@
-package com.codurance.training.tasksSolid;
+package com.codurance.training.tasksSolid.manager;
 
 import com.codurance.training.tasksSolid.commands.*;
 
@@ -24,25 +24,27 @@ public class TaskExecutor {
 
     public void execute(String commandLine) {
         String[] commandRest = commandLine.split(" ", 2);
-        String command = commandRest[0];
+        CommandEnum command = CommandEnum.getCommandEnum(commandRest[0]);
         switch (command) {
-            case "show":
+            case SHOW:
                 showTaskCommand.printAllTaskDetails();
                 break;
-            case "add":
+            case ADD:
                 addCommand.addTaskOrProject(commandRest[1]);
                 break;
-            case "check":
+            case CHECK:
                 updateTaskCommand.check(commandRest[1]);
                 break;
-            case "uncheck":
+            case UNCHECK:
                 updateTaskCommand.uncheck(commandRest[1]);
                 break;
-            case "help":
+            case HELP:
                 helpCommand.printAvailableCommands();
                 break;
+            case INVALID:
+                error(commandRest[0]);
+                break;
             default:
-                error(command);
                 break;
         }
     }

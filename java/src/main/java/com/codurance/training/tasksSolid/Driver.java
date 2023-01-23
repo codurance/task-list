@@ -1,5 +1,7 @@
 package com.codurance.training.tasksSolid;
 
+import com.codurance.training.tasksSolid.manager.TaskRunner;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;

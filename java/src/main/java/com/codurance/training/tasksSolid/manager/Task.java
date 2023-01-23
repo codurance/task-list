@@ -1,6 +1,5 @@
-package com.codurance.training.tasksSolid;
+package com.codurance.training.tasksSolid.manager;
 
-// removed final, as it violates Open Closed Principle
 public class Task {
     private final long id;
     private final String description;
