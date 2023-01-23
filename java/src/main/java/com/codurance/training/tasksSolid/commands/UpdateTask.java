@@ -1,6 +1,7 @@
 package com.codurance.training.tasksSolid.commands;
 
 import com.codurance.training.tasksSolid.Task;
+import com.codurance.training.tasksSolid.TaskContainer;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -8,11 +9,9 @@ import java.util.Map;
 
 public class UpdateTask {
 
-    private final Map<String, List<Task>> tasks;
     private final PrintWriter out;
 
-    public UpdateTask(Map<String, List<Task>> tasks, PrintWriter out) {
-        this.tasks = tasks;
+    public UpdateTask(PrintWriter out) {
         this.out = out;
     }
 
@@ -26,7 +25,7 @@ public class UpdateTask {
 
     private void setDone(String idString, boolean done) {
         int id = Integer.parseInt(idString);
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
+        for (Map.Entry<String, List<Task>> project : TaskContainer.getTasks().entrySet()) {
             for (Task task : project.getValue()) {
                 if (task.getId() == id) {
                     task.setDone(done);

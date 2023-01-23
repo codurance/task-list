@@ -1,17 +1,14 @@
 package com.codurance.training.tasksSolid.commands;
 
 import com.codurance.training.tasksSolid.Task;
+import com.codurance.training.tasksSolid.TaskContainer;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class Add {
-    private final Map<String, List<Task>> tasks;
     private final AddTask addTask;
 
-    public Add(Map<String, List<Task>> tasks, AddTask addTask) {
-        this.tasks = tasks;
+    public Add(AddTask addTask) {
         this.addTask = addTask;
     }
 
@@ -27,7 +24,7 @@ public class Add {
     }
 
     private void addProject(String name) {
-        tasks.put(name, new ArrayList<Task>());
+        TaskContainer.getTasks().put(name, new ArrayList<Task>());
     }
 
 }

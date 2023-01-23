@@ -3,12 +3,9 @@ package com.codurance.training.tasksSolid;
 import com.codurance.training.tasksSolid.commands.*;
 
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
 
 public class TaskExecutor {
 
-    private final Map<String, List<Task>> tasks;
     private final Add addCommand;
     private final AddTask addTaskCommand;
     private final ShowTask showTaskCommand;
@@ -16,12 +13,11 @@ public class TaskExecutor {
     private final Help helpCommand;
     private final PrintWriter out;
 
-    public TaskExecutor(Map<String, List<Task>> tasks, PrintWriter out) {
-        this.tasks = tasks;
-        addTaskCommand = new AddTask(tasks, out);
-        addCommand = new Add(tasks, addTaskCommand);
-        showTaskCommand = new ShowTask(tasks, out);
-        updateTaskCommand = new UpdateTask(tasks, out);
+    public TaskExecutor(PrintWriter out) {
+        addTaskCommand = new AddTask(out);
+        addCommand = new Add(addTaskCommand);
+        showTaskCommand = new ShowTask(out);
+        updateTaskCommand = new UpdateTask(out);
         helpCommand = new Help(out);
         this.out = out;
     }
