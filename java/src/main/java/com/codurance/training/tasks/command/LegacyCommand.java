@@ -24,34 +24,11 @@ public class LegacyCommand implements Command {
         String[] commandRest = commandLine.split(" ", 2);
         String command = commandRest[0];
         switch (command) {
-            case "show":
-                show(commandRest, taskList.getTasks());
-                break;
-            case "add":
-                add(commandRest, taskList);
-                break;
-            case "check":
-                check(commandRest[1], taskList.getTasks());
-                break;
-            case "uncheck":
-                uncheck(commandRest[1], taskList.getTasks());
-                break;
-            case "help":
-                help();
-                break;
-            default:
-                error(command);
-                break;
-        }
-    }
-
-    private void show(String[] commandRest, Map<String, List<Task>> tasks) {
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            out.println(project.getKey());
-            for (Task task : project.getValue()) {
-                out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
-            }
-            out.println();
+            case "add" -> add(commandRest, taskList);
+            case "check" -> check(commandRest[1], taskList.getTasks());
+            case "uncheck" -> uncheck(commandRest[1], taskList.getTasks());
+            case "help" -> help();
+            default -> error(command);
         }
     }
 
@@ -77,7 +54,7 @@ public class LegacyCommand implements Command {
 
 
     private void addProject(String name, Map<String, List<Task>> tasks) {
-        tasks.put(name, new ArrayList<Task>());
+        tasks.put(name, new ArrayList<>());
     }
 
     private void addTask(String project, String description, TaskList tasks) {

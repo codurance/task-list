@@ -1,9 +1,13 @@
 package com.codurance.training.tasks;
 
+import java.time.LocalDate;
+
 public final class Task {
     private final long id;
     private final String description;
     private boolean done;
+
+    private LocalDate deadline;
 
     public Task(long id, String description, boolean done) {
         this.id = id;
@@ -25,5 +29,13 @@ public final class Task {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 }
