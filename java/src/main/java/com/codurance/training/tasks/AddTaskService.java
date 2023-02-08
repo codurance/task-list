@@ -3,14 +3,14 @@ package com.codurance.training.tasks;
 import java.io.*;
 import java.util.*;
 
-public class AddTask {
+public class AddTaskService implements AddTask {
 
     Map<String, List<Task>> tasks;
     PrintWriter out;
 
     private Long lastId;
 
-    public AddTask(Map<String, List<Task>> tasks, PrintWriter out) {
+    public AddTaskService(Map<String, List<Task>> tasks, PrintWriter out) {
         this.tasks = tasks;
         this.out=  out;
         this.lastId = 0l;

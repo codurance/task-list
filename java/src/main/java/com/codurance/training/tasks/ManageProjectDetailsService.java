@@ -3,7 +3,7 @@ package com.codurance.training.tasks;
 import java.io.*;
 import java.util.*;
 
-public class ManageProjectDetails {
+public class ManageProjectDetailsService implements ManageProjectDetails{
 
     private final AddTask addTask;
 
@@ -11,7 +11,7 @@ public class ManageProjectDetails {
 
     private PrintWriter out;
 
-    public ManageProjectDetails(Map<String, List<Task>> tasks, PrintWriter out) {
+    public ManageProjectDetailsService(Map<String, List<Task>> tasks, PrintWriter out) {
         this.tasks = tasks;
         this.out = out;
         this.addTask = new AddTaskService(tasks, out);
