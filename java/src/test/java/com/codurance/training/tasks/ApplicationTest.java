@@ -53,13 +53,13 @@ public final class ApplicationTest {
 
     @Test(timeout = 1000) public void
     it_works() throws IOException {
-        execute("show");
+        execute("view by project");
 
         execute("add project secrets");
         execute("add task secrets Eat more donuts.");
         execute("add task secrets Destroy all humans.");
 
-        execute("show");
+        execute("view by project");
         readLines(
             "secrets",
             "    [ ] 1: Eat more donuts.",
@@ -80,7 +80,7 @@ public final class ApplicationTest {
         execute("check 5");
         execute("check 6");
 
-        execute("show");
+        execute("view by project");
         readLines(
                 "secrets",
                 "    [x] 1: Eat more donuts.",

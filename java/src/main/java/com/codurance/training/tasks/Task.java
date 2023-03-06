@@ -1,9 +1,10 @@
 package com.codurance.training.tasks;
-
 public final class Task {
     private final long id;
     private final String description;
     private boolean done;
+
+    private String date;
 
     public Task(long id, String description, boolean done) {
         this.id = id;
@@ -26,4 +27,12 @@ public final class Task {
     public void setDone(boolean done) {
         this.done = done;
     }
+
+    public void setDeadLine(String date){
+        this.date = date;
+    }
+    public String getDeadLine(){
+        return date;
+    }
+
 }
