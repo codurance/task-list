@@ -8,10 +8,10 @@ public class DeleteTask {
     Project project;
 
     public void deleteTaskFromProject(String taskId){
-        int taskNum = Integer.parseInt(taskId);
+       // int taskNum = Integer.parseInt(taskId);
         int i=0; boolean f= false;
         for(Task t :  project.getTasks()){
-            if(t.getId() == taskNum){
+            if(t.getId().equals(taskId)){
                 f = true;
                 break;
             }

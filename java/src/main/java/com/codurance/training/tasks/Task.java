@@ -3,13 +3,21 @@ package com.codurance.training.tasks;
 import java.util.Date;
 
 public final class Task {
-//    Give each task an optional deadline with the deadline <ID> <date> command.
-//    Show all tasks due today with the today command.
-    private final long id;
+    private final String id;
     private final String description;
     private boolean done;
 
     private Date deadline;
+
+    private Date createdDate;
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
     public Date getDeadline() {
         return deadline;
@@ -19,13 +27,13 @@ public final class Task {
         this.deadline = deadline;
     }
 
-    public Task(long id, String description, boolean done) {
+    public Task(String id, String description, boolean done) {
         this.id = id;
         this.description = description;
         this.done = done;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

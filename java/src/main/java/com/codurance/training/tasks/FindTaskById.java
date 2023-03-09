@@ -11,10 +11,10 @@ public class FindTaskById {
     }
 
     public Task getTask(String taskId){
-        int taskID = Integer.parseInt(taskId);
+        //int taskID = Integer.parseInt(taskId);
         for (Map.Entry<String, Project> project : addedProjects.entrySet()) {
             for (Task task : project.getValue().getTasks()) {
-                if (task.getId() == taskID) {
+                if (task.getId().equals(taskId)) {
                     return task;
                 }
             }
@@ -23,10 +23,10 @@ public class FindTaskById {
     }
 
     public Project getProject(String taskId){
-        int taskID = Integer.parseInt(taskId);
+        //int taskID = Integer.parseInt(taskId);
         for (Map.Entry<String, Project> project : addedProjects.entrySet()) {
             for (Task task : project.getValue().getTasks()) {
-                if (task.getId() == taskID) {
+                if (task.getId().equals(taskId)) {
                     return project.getValue();
                 }
             }

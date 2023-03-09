@@ -10,11 +10,11 @@ import java.util.*;
 
 public final class TaskList implements Runnable {
     private static final String QUIT = "quit";
-    private Map<String, Project> addedProjects = new LinkedHashMap<>();
+    private final Map<String, Project> addedProjects = new LinkedHashMap<>();
     private final BufferedReader in;
     private final PrintWriter out;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         PrintWriter out = new PrintWriter(System.out);
         new TaskList(in, out).run();
@@ -52,10 +52,6 @@ public final class TaskList implements Runnable {
             case "add":
                 String[] subcommandRest = commandRest[1].split(" ", 2);
                 String subcommand = subcommandRest[0];
-                //Allow users to delete tasks with the delete <ID> command.
-//                View tasks by date with the view by date command.
-//                View tasks by deadline with the view by deadline command.
-//                Don’t remove the functionality that allows users to view tasks by project, but change the command to view by project.
 
                 if (subcommand.equals("project")) {
                     addedProjects.put(subcommandRest[1], new Project(subcommandRest[1]));
@@ -66,7 +62,10 @@ public final class TaskList implements Runnable {
                         System.out.println();
                     }else {
                         Project project = addedProjects.get(projectTask[0]);
-                        project.getTasks().add(new Task( (long)(Math.random()*100), projectTask[1], false));
+                        String[] taskCmd = projectTask[1].split(" ", 2);
+                        String verifiedTaskId = taskCmd[1].replaceAll("[^a-zA-Z0-9]", "");
+                        System.out.println(verifiedTaskId);
+                        project.getTasks().add(new Task( verifiedTaskId, taskCmd[0], false));
                     }
                 }
                 break;
@@ -97,6 +96,18 @@ public final class TaskList implements Runnable {
                     System.out.println(e.toString());
                 }
                 break;
+            case "setDate":
+                String[] cmd3 = commandRest[1].split(" ", 2);
+                FindTaskById dateTask =  new FindTaskById(addedProjects);
+
+                Task taskDate = dateTask.getTask(cmd3[0]) ;
+                try {
+                    Date createdDate = new SimpleDateFormat("dd-MM-yyyy").parse(cmd3[1]);
+                    taskDate.setCreatedDate(createdDate);
+                }catch(ParseException e){
+                    System.out.println(e.toString());
+                }
+                break;
             case "today":
                 DueTask dueTask =  new DueTask(addedProjects);
                 List<Task> tasks = dueTask.getTaskDueToday();
@@ -119,7 +130,7 @@ public final class TaskList implements Runnable {
                     System.out.println("No project found with this task.");
                 }
                 break;
-            case "view by deadline":
+            case "view_by_deadline":
                 try {
                     Date deadLineDate = new SimpleDateFormat("dd-MM-yyyy").parse(commandRest[1]);
                     TaskByDeadline deadLineTask =  new TaskByDeadline(addedProjects);
@@ -135,6 +146,33 @@ public final class TaskList implements Runnable {
                     System.out.println(e.toString());
                 }
                 break;
+            case "view_by_date":
+                try {
+                    Date createdDt = new SimpleDateFormat("dd-MM-yyyy").parse(commandRest[1]);
+                    TaskByDate createdTask =  new TaskByDate(addedProjects);
+                    List<Task> tasks_createdDt = createdTask.getTaskByDate(createdDt);
+                    if(!tasks_createdDt.isEmpty()){
+                        for(Task t: tasks_createdDt){
+                            System.out.println(t.getDescription());
+                        }
+                    }else{
+                        System.out.println("No Task found");
+                    }
+                }catch(ParseException e){
+                    System.out.println(e.toString());
+                }
+                break;
+            case "view_by_project":
+                TasksByProject tasksByProject =  new TasksByProject(addedProjects);
+                List<Task> tasks_project = tasksByProject.getTaskByProject(commandRest[1]);
+                if(!tasks_project.isEmpty()){
+                    for(Task t: tasks_project){
+                        System.out.println(t.getDescription());
+                    }
+                }else{
+                    System.out.println("No Task found");
+                }
+                break;
             case "help":
                 help();
                 break;
@@ -148,7 +186,7 @@ public final class TaskList implements Runnable {
         for (Map.Entry<String, Project> project : addedProjects.entrySet()) {
             out.println(project.getKey());
             for (Task task : project.getValue().getTasks()) {
-                out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
+                out.printf("    [%c] %s: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
             }
             out.println();
         }
@@ -158,8 +196,15 @@ public final class TaskList implements Runnable {
         out.println("Commands:");
         out.println("  show");
         out.println("  add project <project name>");
-        out.println("  add task <project name> <task description>");
+        out.println("  add task <project name> <task description> <task Id>");
         out.println("  check <task ID>");
+        out.println("  deadline <task ID> <deadlineDate>");
+        out.println("  setDate <task ID> <createdDate>");
+        out.println("  view_by_deadline <deadlineDate>");
+        out.println("  view_by_date <createdDate>");
+        out.println("  view_by_project <project name>");
+        out.println("  delete <task ID>");
+        out.println("  today");
         out.println("  uncheck <task ID>");
         out.println();
     }
