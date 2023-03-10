@@ -4,19 +4,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public final class TaskList implements Runnable {
     private static final String QUIT = "quit";
 
-    private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
+    private final Map<Long, Project> projectList = new LinkedHashMap<>();
+    private final List<String> taskIds = new ArrayList<>();
+    private final ViewService viewService = new View();
+    private final AddService addProjectService = new AddProject();
+    private final AddService addTaskService = new AddTask();
+    private final StatusService statusService = new Status();
+    private final DeadlineService deadlineService = new Deadline();
+    private final DeleteService deleteService = new DeleteTask();
+
     private final BufferedReader in;
     private final PrintWriter out;
-
-    private long lastId = 0;
 
     public static void main(String[] args) throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -42,25 +46,59 @@ public final class TaskList implements Runnable {
             if (command.equals(QUIT)) {
                 break;
             }
-            execute(command);
+            try{
+                execute(command);
+            } catch(Exception e) {
+                out.println(e);
+            }
         }
     }
 
-    private void execute(String commandLine) {
+    private void execute(String commandLine) throws Exception {
         String[] commandRest = commandLine.split(" ", 2);
         String command = commandRest[0];
         switch (command) {
-            case "show":
-                show();
+            case "view_by_project":
+                viewService.viewTasksByProject(projectList, out);
+                break;
+            case "view_by_date":
+                viewService.viewTasksByDate(projectList, out);
+                break;
+            case "view_by_deadline":
+                viewService.viewTasksByDeadline(projectList, out);
                 break;
             case "add":
-                add(commandRest[1]);
+                String[] subcommandRest = commandRest[1].split(" ", 2);
+                String subcommand = subcommandRest[0];
+                if (subcommand.equals("project")) {
+                    addProjectService.add(projectList, subcommandRest[1], out);
+                } else if (subcommand.equals("task")) {
+                    String[] projectTask = subcommandRest[1].split(" ", 3);
+                    if(!taskIds.contains(projectTask[1])) {
+                        boolean flag = addTaskService.add(projectList, subcommandRest[1], out);
+                        if(flag) taskIds.add(projectTask[1]);
+                    } else {
+                        out.printf("A task with ID \"%s\" exists already. Use any other id.", projectTask[1]);
+                        out.println();
+                    }
+                }
                 break;
             case "check":
-                check(commandRest[1]);
+                statusService.changeStatus(projectList, commandRest[1], true, out);
                 break;
             case "uncheck":
-                uncheck(commandRest[1]);
+                statusService.changeStatus(projectList, commandRest[1], false, out);
+                break;
+            case "deadline":
+                SimpleDateFormat formatter1=new SimpleDateFormat("dd/MM/yyyy");
+                String[] subcommandRest1 = commandRest[1].split(" ", 2);
+                deadlineService.setDeadline(projectList, subcommandRest1[0], formatter1.parse(subcommandRest1[1]));
+                break;
+            case "today":
+                viewService.viewTasksDueToday(projectList, out);
+                break;
+            case "delete":
+                deleteService.deleteTask(projectList, taskIds, commandRest[1], out);
                 break;
             case "help":
                 help();
@@ -71,79 +109,23 @@ public final class TaskList implements Runnable {
         }
     }
 
-    private void show() {
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            out.println(project.getKey());
-            for (Task task : project.getValue()) {
-                out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
-            }
-            out.println();
-        }
-    }
-
-    private void add(String commandLine) {
-        String[] subcommandRest = commandLine.split(" ", 2);
-        String subcommand = subcommandRest[0];
-        if (subcommand.equals("project")) {
-            addProject(subcommandRest[1]);
-        } else if (subcommand.equals("task")) {
-            String[] projectTask = subcommandRest[1].split(" ", 2);
-            addTask(projectTask[0], projectTask[1]);
-        }
-    }
-
-    private void addProject(String name) {
-        tasks.put(name, new ArrayList<Task>());
-    }
-
-    private void addTask(String project, String description) {
-        List<Task> projectTasks = tasks.get(project);
-        if (projectTasks == null) {
-            out.printf("Could not find a project with the name \"%s\".", project);
-            out.println();
-            return;
-        }
-        projectTasks.add(new Task(nextId(), description, false));
-    }
-
-    private void check(String idString) {
-        setDone(idString, true);
-    }
-
-    private void uncheck(String idString) {
-        setDone(idString, false);
-    }
-
-    private void setDone(String idString, boolean done) {
-        int id = Integer.parseInt(idString);
-        for (Map.Entry<String, List<Task>> project : tasks.entrySet()) {
-            for (Task task : project.getValue()) {
-                if (task.getId() == id) {
-                    task.setDone(done);
-                    return;
-                }
-            }
-        }
-        out.printf("Could not find a task with an ID of %d.", id);
-        out.println();
-    }
-
     private void help() {
         out.println("Commands:");
-        out.println("  show");
+        out.println("  view_by_project");
+        out.println("  view_by_date");
+        out.println("  view_by_deadline");
         out.println("  add project <project name>");
-        out.println("  add task <project name> <task description>");
+        out.println("  add task <project name> <task ID> <task description> (<task ID> should be alpha-numeric)");
         out.println("  check <task ID>");
         out.println("  uncheck <task ID>");
+        out.println("  deadline <task ID> <date> (Use dd/MM/yyyy format)");
+        out.println("  today");
+        out.println("  delete <task ID>");
         out.println();
     }
 
     private void error(String command) {
         out.printf("I don't know what the command \"%s\" is.", command);
         out.println();
-    }
-
-    private long nextId() {
-        return ++lastId;
     }
 }
