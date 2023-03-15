@@ -24,12 +24,12 @@ public final class ApplicationTest {
 
     private Thread applicationThread;
 
-    public ApplicationTest() throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(new PipedInputStream(inStream)));
-        PrintWriter out = new PrintWriter(new PipedOutputStream(outStream), true);
-        TaskList taskList = new TaskList(in, out);
-        applicationThread = new Thread(taskList);
-    }
+//    public ApplicationTest() throws IOException {
+//        BufferedReader in = new BufferedReader(new InputStreamReader(new PipedInputStream(inStream)));
+//        PrintWriter out = new PrintWriter(new PipedOutputStream(outStream), true);
+//        TaskList taskList = new TaskList(in, out);
+//        applicationThread = new Thread(taskList);
+//    }
 
     @Before public void
     start_the_application() {
