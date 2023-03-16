@@ -1,17 +1,25 @@
 package com.codurance.training.tasks;
 
+import java.util.Date;
+
 public final class Task {
-    private final long id;
+    private final String id;
     private final String description;
     private boolean done;
 
-    public Task(long id, String description, boolean done) {
+    private Date createdDate;
+
+    private Date deadLine;
+
+    public Task(String id, String description, boolean done, Date createdDate, Date deadLine) {
         this.id = id;
         this.description = description;
         this.done = done;
+        this.createdDate = createdDate;
+        this.deadLine = deadLine;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -26,4 +34,23 @@ public final class Task {
     public void setDone(boolean done) {
         this.done = done;
     }
+
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getDeadLine() {
+        return deadLine;
+    }
+
+    public void setDeadLine(Date deadLine) {
+        this.deadLine = deadLine;
+    }
+
+
 }
