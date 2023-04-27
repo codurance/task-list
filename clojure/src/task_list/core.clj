@@ -1,16 +1,15 @@
 (ns task-list.core
   (:require
-   [clojure.walk :as walk]
    [clojure.string :as str]))
 
 (defn create-task-list []
   {})
 
-(def id-seq (atom (range)))
+(def ^:dynamic *id-seq* (atom (range)))
 
 (defn next-id []
-  (swap! id-seq rest)
-  (first @id-seq))
+  (swap! *id-seq* rest)
+  (first @*id-seq*))
 
 (defn create-task [description]
   {:id (next-id)
@@ -19,7 +18,9 @@
 
 (defn add-task [task-list project description]
   (let [task (create-task description)]
-    (assoc task-list project (conj (get task-list project) task))))
+    (if (get task-list project)
+      (assoc task-list project (conj (get task-list project) task))
+      (println (str "Could not find a project with the name " project ".")))))
 
 (defn add-project [task-list project-name]
   (assoc task-list project-name []))
@@ -54,7 +55,9 @@
           (update-in task-list [@proj-name @idx :done] (fn [_] value))
           (if (not (empty? (rest tasks)))
             (recur (rest tasks))
-            task-list))))))
+            (do
+              (println (str "Could not find a task with an ID of " id))
+              task-list)))))))
 
 (defn check [task-list id]
   (set-done task-list id true))
@@ -62,13 +65,26 @@
 (defn uncheck [task-list id]
   (set-done task-list id false))
 
+(defn error [command-line]
+  (println (str "I don't know what the command " command-line "is.")))
+
 (defn execute [task-list command-line]
   (let [[command args] (str/split command-line #" " 2)]
     (case command
       "show" (do (show task-list)
                  task-list)
       "add" (add task-list args)
-      "check" (check task-list (Integer/parseInt args)))))
+      "check" (check task-list (Integer/parseInt args))
+      "uncheck" (uncheck task-list (Integer/parseInt args))
+      "help" (println "Commands:
+  show
+  add project <project name>
+  add task <project name> <task description>
+  check <task ID>
+  uncheck <task ID>")
+      "quit" (System/exit 0)
+      (do (error command-line)
+          task-list))))
 
 (def task-list (-> (create-task-list)
                    (add-project "secrets")
@@ -76,3 +92,11 @@
                    (add-task "secrets" "Destroy all humans.")
                    (check 2)
                    (uncheck 2)))
+
+(defn -main []
+  (binding [*id-seq* (atom (range))]
+   (loop [task-list (create-task-list)]
+     (print "> ")
+     (flush)
+     (let [input (read-line)]
+       (recur (execute task-list input))))))
