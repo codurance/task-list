@@ -5,36 +5,33 @@
 
 (declare execute)
 
-(defn reset-id-seq []
-  (reset! sut/id-seq (range)))
-
 (deftest application-test
-  (reset-id-seq)
-  (let [task-list (sut/create-task-list)
-        output (with-out-str
-                 (-> (sut/create-task-list)
-                     (sut/execute "show")
-                     (sut/execute "add project secrets")
-                     (sut/execute "add task secrets Eat more donuts.")
-                     (sut/execute "add task secrets Destroy all humans.")
-                     (sut/execute "show")
+  (binding [sut/*id-seq* (atom (range))]
+    (let [task-list (sut/create-task-list)
+          output (with-out-str
+                   (-> (sut/create-task-list)
+                       (sut/execute "show")
+                       (sut/execute "add project secrets")
+                       (sut/execute "add task secrets Eat more donuts.")
+                       (sut/execute "add task secrets Destroy all humans.")
+                       (sut/execute "show")
 
 
 
-                     (sut/execute "add project training")
-                     (sut/execute "add task training Four Elements of Simple Design")
-                     (sut/execute "add task training SOLID")
-                     (sut/execute "add task training Coupling and Cohesion")
-                     (sut/execute "add task training Primitive Obsession")
-                     (sut/execute "add task training Outside-In TDD")
-                     (sut/execute "add task training Interaction-Driven Design")
+                       (sut/execute "add project training")
+                       (sut/execute "add task training Four Elements of Simple Design")
+                       (sut/execute "add task training SOLID")
+                       (sut/execute "add task training Coupling and Cohesion")
+                       (sut/execute "add task training Primitive Obsession")
+                       (sut/execute "add task training Outside-In TDD")
+                       (sut/execute "add task training Interaction-Driven Design")
 
-                     (sut/execute "check 1")
-                     (sut/execute "check 3")
-                     (sut/execute "check 5")
-                     (sut/execute "check 6")
-                     (sut/execute "show")))]
-    (is (= "secrets
+                       (sut/execute "check 1")
+                       (sut/execute "check 3")
+                       (sut/execute "check 5")
+                       (sut/execute "check 6")
+                       (sut/execute "show")))]
+      (is (= "secrets
   [ ] 1: Eat more donuts.
   [ ] 2: Destroy all humans.
 
@@ -51,7 +48,7 @@ training
   [ ] 8: Interaction-Driven Design
 
 "
-           output))))
+             output)))))
 
 (defn execute [task-list command]
   (sut/execute task-list command))
