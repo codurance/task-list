@@ -86,13 +86,6 @@
       (do (error command-line)
           task-list))))
 
-(def task-list (-> (create-task-list)
-                   (add-project "secrets")
-                   (add-task "secrets" "Eat more donuts.")
-                   (add-task "secrets" "Destroy all humans.")
-                   (check 2)
-                   (uncheck 2)))
-
 (defn -main []
   (binding [*id-seq* (atom (range))]
    (loop [task-list (create-task-list)]
