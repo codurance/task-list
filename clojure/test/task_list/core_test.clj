@@ -1,14 +1,11 @@
 (ns task-list.core-test
   (:require
-   [clojure.test :refer [deftest is testing]]
+   [clojure.test :refer [deftest is]]
    [task-list.core :as sut]))
-
-(declare execute)
 
 (deftest application-test
   (binding [sut/*id-seq* (atom (range))]
-    (let [task-list (sut/create-task-list)
-          output (with-out-str
+    (let [output (with-out-str
                    (-> (sut/create-task-list)
                        (sut/execute "show")
                        (sut/execute "add project secrets")
@@ -49,6 +46,3 @@ training
 
 "
              output)))))
-
-(defn execute [task-list command]
-  (sut/execute task-list command))
