@@ -27,7 +27,9 @@ public final class ApplicationTest {
     public ApplicationTest() throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(new PipedInputStream(inStream)));
         PrintWriter out = new PrintWriter(new PipedOutputStream(outStream), true);
-        TaskList taskList = new TaskList(in, out);
+        TaskActions taskActions = new TaskActionsImpl();
+        Executor executor = new ExecutorImpl(taskActions, out);
+        TaskList taskList = new TaskList(in, out, executor);
         applicationThread = new Thread(taskList);
     }
 
