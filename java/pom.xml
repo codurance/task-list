@@ -5,7 +5,9 @@
     <artifactId>tasks</artifactId>
     <version>0.1</version>
 
+    <packaging>jar</packaging>
     <name>Task List</name>
+
 
     <dependencies>
         <dependency>
