@@ -9,8 +9,8 @@ public class TaskExecutionerImpl implements TaskExecutioner {
         String[] commandRest = commandLine.split(" ", 2);
         String command = commandRest[0];
         switch (command) {
-            case "show":
-                taskActions.show();
+            case "view":
+                taskActions.show(commandRest[1]);
                 break;
             case "add":
                 taskActions.add(commandRest[1]);
@@ -32,6 +32,9 @@ public class TaskExecutionerImpl implements TaskExecutioner {
                 break;
             case "delete":
                 taskActions.delete(commandRest[1]);
+                break;
+            case "customize":
+                taskActions.customize(commandRest[1]);
                 break;
             default:
                 taskActions.error(command);

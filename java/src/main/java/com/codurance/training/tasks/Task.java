@@ -9,6 +9,8 @@ public final class Task {
 
     private Date deadline;
 
+    private String customizableId;
+
     public Task(long id, String description, boolean done) {
         this.id = id;
         this.description = description;
@@ -37,5 +39,12 @@ public final class Task {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
+    }
+    public String getCustomizableId(){
+        return customizableId;
+    }
+
+    public void setCustomizableId(String customizableId){
+        this.customizableId=customizableId;
     }
 }
