@@ -10,4 +10,8 @@ public class TaskConstant {
     public static final String DEADLINE = "deadline";
     public static final String TODAY = "today";
     public static final String DELETE = "delete";
+    public static final String VIEW = "view";
+    public static final String DATE = "date";
+    public static final String PROJECT = "project";
+    public static final String TASK = "task";
 }

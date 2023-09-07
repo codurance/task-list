@@ -9,10 +9,9 @@ import java.io.PrintWriter;
 
 class TaskHandler {
 
-    private final static TaskService taskService = new TaskServiceImpl();
-
-    private final static TaskInfoService taskInfoService = new TaskInfoServiceImpl();
-    public static void execute(String commandLine, PrintWriter out) {
+    private final TaskService taskService = new TaskServiceImpl();
+    private final TaskInfoService taskInfoService = new TaskInfoServiceImpl();
+    public void execute(String commandLine, PrintWriter out) {
         String[] commandRest = commandLine.split(" ", 2);
         String command = commandRest[0];
         switch (command) {
@@ -38,7 +37,11 @@ class TaskHandler {
                 taskInfoService.showDueToday(out);
                 break;
             case TaskConstant.DELETE:
-
+                taskService.delete(out, commandRest[1]);
+                break;
+            case TaskConstant.VIEW:
+                taskInfoService.view(out, commandRest[1]);
+                break;
             default:
                 taskInfoService.error(out, command);
                 break;

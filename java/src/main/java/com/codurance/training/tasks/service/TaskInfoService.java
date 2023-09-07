@@ -3,8 +3,10 @@ package com.codurance.training.tasks.service;
 import java.io.PrintWriter;
 
 public interface TaskInfoService {
-    public void show(PrintWriter out);
-    public void showDueToday(PrintWriter out);
-    public void help(PrintWriter out);
-    public void error(PrintWriter out, String Command);
+    void show(PrintWriter out);
+    void showDueToday(PrintWriter out);
+    void help(PrintWriter out);
+    void error(PrintWriter out, String Command);
+
+    void view(PrintWriter out, String commandLine);
 }

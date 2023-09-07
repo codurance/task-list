@@ -5,13 +5,14 @@ import java.io.PrintWriter;
 public interface TaskService {
 
 
-    public void add(PrintWriter out, String commandLine) ;
+    void add(PrintWriter out, String commandLine) ;
 
-    public void check(PrintWriter out, String idString);
+    void check(PrintWriter out, String idString);
 
-    public void uncheck(PrintWriter out, String idString);
+    void uncheck(PrintWriter out, String idString);
 
 
-    public void addDeadline(PrintWriter out,String commandLine);
+    void addDeadline(PrintWriter out, String commandLine);
 
+    void delete(PrintWriter out, String commandLine);
 }

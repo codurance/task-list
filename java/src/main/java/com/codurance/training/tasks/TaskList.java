@@ -1,23 +1,15 @@
 package com.codurance.training.tasks;
 
-import com.codurance.training.tasks.service.TaskService;
-import com.codurance.training.tasks.service.impl.TaskServiceImpl;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 public final class TaskList implements Runnable {
     //private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
     private final BufferedReader in;
     private final PrintWriter out;
-    //private long lastId = 0;
-    //private final static TaskService taskService = new TaskServiceImpl();
+    private TaskHandler taskHandler = new TaskHandler();
 
     public static void main(String[] args)  throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -43,7 +35,7 @@ public final class TaskList implements Runnable {
             if (command.equals(TaskConstant.QUIT)) {
                 break;
             }
-            TaskHandler.execute(command, out);
+            taskHandler.execute(command, out);
         }
     }
 
