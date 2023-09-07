@@ -1,5 +1,8 @@
 package com.codurance.training.tasks;
 
+import com.codurance.training.tasks.service.TaskService;
+import com.codurance.training.tasks.service.impl.TaskServiceImpl;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,15 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 public final class TaskList implements Runnable {
-    private static final String QUIT = "quit";
-
-    private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
+    //private final Map<String, List<Task>> tasks = new LinkedHashMap<>();
     private final BufferedReader in;
     private final PrintWriter out;
+    //private long lastId = 0;
+    //private final static TaskService taskService = new TaskServiceImpl();
 
-    private long lastId = 0;
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)  throws Exception {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         PrintWriter out = new PrintWriter(System.out);
         new TaskList(in, out).run();
@@ -39,34 +40,42 @@ public final class TaskList implements Runnable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            if (command.equals(QUIT)) {
+            if (command.equals(TaskConstant.QUIT)) {
                 break;
             }
-            execute(command);
+            TaskHandler.execute(command, out);
         }
     }
 
-    private void execute(String commandLine) {
+   /* private void execute(String commandLine) {
         String[] commandRest = commandLine.split(" ", 2);
         String command = commandRest[0];
         switch (command) {
-            case "show":
-                show();
+            case TaskConstant.SHOW:
+                taskService.show(out);
                 break;
-            case "add":
-                add(commandRest[1]);
+            case TaskConstant.ADD:
+                taskService.add(out, commandRest[1]);
                 break;
-            case "check":
-                check(commandRest[1]);
+            case TaskConstant.CHECK:
+                taskService.check(out, commandRest[1]);
                 break;
-            case "uncheck":
-                uncheck(commandRest[1]);
+            case TaskConstant.UNCHECK:
+                taskService.uncheck(out, commandRest[1]);
                 break;
-            case "help":
-                help();
+            case TaskConstant.HELP:
+                taskService.help(out);
                 break;
+            case TaskConstant.DEADLINE:
+                taskService.addDeadline(out, commandRest[1]);
+                break;
+            case TaskConstant.TODAY:
+                taskService.showDueToday(out);
+                break;
+            case TaskConstant.DELETE:
+
             default:
-                error(command);
+                taskService.error(out, command);
                 break;
         }
     }
@@ -146,4 +155,5 @@ public final class TaskList implements Runnable {
     private long nextId() {
         return ++lastId;
     }
+*/
 }
