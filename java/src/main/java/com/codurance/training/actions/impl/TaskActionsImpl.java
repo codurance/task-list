@@ -2,12 +2,12 @@ package com.codurance.training.actions.impl;
 
 import com.codurance.training.actions.TaskActions;
 import com.codurance.training.tasks.Task;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TaskActionsImpl implements TaskActions {
     private final PrintWriter out = new PrintWriter(System.out);
@@ -20,7 +20,9 @@ public class TaskActionsImpl implements TaskActions {
         for (Map.Entry<String, List<Task>> project : tasksMap.entrySet()) {
             out.println(project.getKey());
             for (Task task : project.getValue()) {
-                out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
+               // out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
+                System.out.println(task.isDone()?'x':" "+task.getId()+" "+task.getDescription()+" "+task.getDeadline());
+
             }
             out.println();
         }
@@ -74,18 +76,68 @@ public class TaskActionsImpl implements TaskActions {
     }
     @Override
     public void help() {
-        out.println("Commands:");
-        out.println("  show");
-        out.println("  add project <project name>");
-        out.println("  add task <project name> <task description>");
-        out.println("  check <task ID>");
-        out.println("  uncheck <task ID>");
-        out.println();
+//        out.println("Commands:");
+//        out.println("  show");
+//        out.println("  add project <project name>");
+//        out.println("  add task <project name> <task description>");
+//        out.println("  check <task ID>");
+//        out.println("  uncheck <task ID>");
+//        out.println("  deadline <task ID>");
+//        out.println("  delete <task ID>");
+//        out.println("  today");
+//        out.println();
+        System.out.println("Commands:");
+        System.out.println("show");
+        System.out.println("add project <project name>");
+        System.out.println("add task <project name> <task description>");
     }
     @Override
     public void error(String command) {
         out.printf("I don't know what the command \"%s\" is.", command);
         out.println();
+    }
+
+    @Override
+    public void deadline(String command) {
+        try {
+            String[] subCommand = command.split(" ", 2);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date deadlineDate = sdf.parse(subCommand[1]);
+            int id = Integer.parseInt(subCommand[0]);
+            for (Map.Entry<String, List<Task>> project : tasksMap.entrySet()) {
+                for (Task task : project.getValue()) {
+                    if (task.getId() == id) {
+                        task.setDeadline(deadlineDate);
+                        return;
+                    }
+                }
+            }
+        }catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void today() {
+        for (Map.Entry<String, List<Task>> project : tasksMap.entrySet()) {
+            for (Task task : project.getValue()) {
+                if (DateUtils.isSameDay(new Date(),task.getDeadline())) {
+//                    out.printf("    [%c] %d: %s%n", (task.isDone() ? 'x' : ' '), task.getId(), task.getDescription());
+                    System.out.println(task.isDone()?'x':" "+task.getId()+" "+task.getDescription()+" "+task.getDeadline());
+                }
+            }
+            out.println();
+        }
+    }
+
+    @Override
+    public void delete(String command) {
+        int id = Integer.parseInt(command);
+        for (Map.Entry<String, List<Task>> project : tasksMap.entrySet()) {
+            List<Task> taskList = project.getValue();
+            taskList.removeIf(task -> task.getId()==id);
+            }
+
     }
 
     public long nextId() {

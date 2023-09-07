@@ -16,4 +16,10 @@ package com.codurance.training.actions;
      void help();
 
      void error(String command);
-}
+
+     void deadline(String command);
+
+     void today();
+
+     void delete(String command);
+ }

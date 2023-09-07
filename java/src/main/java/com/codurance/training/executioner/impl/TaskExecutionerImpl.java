@@ -24,6 +24,15 @@ public class TaskExecutionerImpl implements TaskExecutioner {
             case "help":
                 taskActions.help();
                 break;
+            case "deadline":
+                taskActions.deadline(commandRest[1]);
+                break;
+            case "today":
+                taskActions.today();
+                break;
+            case "delete":
+                taskActions.delete(commandRest[1]);
+                break;
             default:
                 taskActions.error(command);
                 break;
