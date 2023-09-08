@@ -1,29 +1,17 @@
 package com.codurance.training.tasks;
 
-public final class Task {
-    private final long id;
-    private final String description;
-    private boolean done;
+import java.util.Date;
 
-    public Task(long id, String description, boolean done) {
-        this.id = id;
-        this.description = description;
-        this.done = done;
-    }
+interface Task {
+    long getId();
 
-    public long getId() {
-        return id;
-    }
+    String getDescription();
 
-    public String getDescription() {
-        return description;
-    }
+    boolean isDone();
 
-    public boolean isDone() {
-        return done;
-    }
+    void setDone(boolean done);
 
-    public void setDone(boolean done) {
-        this.done = done;
-    }
+    Date getDeadline();
+
+    void setDeadline(Date deadline);
 }
