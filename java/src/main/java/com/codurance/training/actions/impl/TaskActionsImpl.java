@@ -85,20 +85,19 @@ public class TaskActionsImpl implements TaskActions {
     }
     @Override
     public void help() {
-//        out.println("Commands:");
-//        out.println("  show");
-//        out.println("  add project <project name>");
-//        out.println("  add task <project name> <task description>");
-//        out.println("  check <task ID>");
-//        out.println("  uncheck <task ID>");
-//        out.println("  deadline <task ID>");
-//        out.println("  delete <task ID>");
-//        out.println("  today");
-//        out.println();
-        System.out.println("Commands:");
-        System.out.println("show");
-        System.out.println("add project <project name>");
-        System.out.println("add task <project name> <task description>");
+        out.println("Commands:");
+        out.println("  view by project");
+        out.println("  view by date");
+        out.println("  view by deadline");
+        out.println("  add project <project name>");
+        out.println("  add task <project name> <task description>");
+        out.println("  check <task ID>");
+        out.println("  uncheck <task ID>");
+        out.println("  deadline <task ID>");
+        out.println("  delete <task ID>");
+        out.println("  customize <task ID> <customize ID>");
+        out.println("  today");
+        out.println();
     }
     @Override
     public void error(String command) {
