@@ -1,8 +1,8 @@
-package com.codurance.training.tasks;
+package com.codurance.training.tasks.task;
 
-public final class Task {
-    private final long id;
-    private final String description;
+public class Task implements ITask {
+    private long id;
+    private String description;
     private boolean done;
 
     public Task(long id, String description, boolean done) {

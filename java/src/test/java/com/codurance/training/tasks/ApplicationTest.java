@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
+
+import com.codurance.training.tasks.executor.CommandExecutor;
+import com.codurance.training.tasks.executor.ICommandExecutor;
+import com.codurance.training.tasks.tasklist.ITaskList;
+import com.codurance.training.tasks.tasklist.TaskList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,21 +21,21 @@ import static org.hamcrest.Matchers.is;
 
 public final class ApplicationTest {
     public static final String PROMPT = "> ";
-    private final PipedOutputStream inStream = new PipedOutputStream();
+    private PipedOutputStream inStream = new PipedOutputStream();
     private final PrintWriter inWriter = new PrintWriter(inStream, true);
 
-    private final PipedInputStream outStream = new PipedInputStream();
+    private PipedInputStream outStream = new PipedInputStream();
     private final BufferedReader outReader = new BufferedReader(new InputStreamReader(outStream));
 
     private Thread applicationThread;
 
     public ApplicationTest() throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(new PipedInputStream(inStream)));
-        PrintWriter out = new PrintWriter(new PipedOutputStream(outStream), true);
-        TaskList taskList = new TaskList(in, out);
-        applicationThread = new Thread(taskList);
+        BufferedReader in = new BufferedReader(new InputStreamReader(outStream));
+        PrintWriter out = new PrintWriter(inStream, true);
+        ITaskList taskList = new TaskList();
+        ICommandExecutor commandExecutor = new CommandExecutor(in, out, taskList);
+        applicationThread = new Thread((Runnable) commandExecutor);
     }
-
     @Before public void
     start_the_application() {
         applicationThread.start();
