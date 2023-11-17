@@ -1,7 +1,9 @@
-
-export class Task
-{
-    constructor(private _id: number, private _description: string, private _done: boolean) {}
+export class Task {
+    constructor(
+        private readonly _id: number,
+        private _description: string,
+        private _done: boolean
+    ) { }
 
     get id() {
         return this._id;
