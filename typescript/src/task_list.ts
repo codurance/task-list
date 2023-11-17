@@ -1,106 +1,86 @@
-/// <reference path="../typings/node/node.d.ts" />
+import * as readline from 'readline';
+import * as util from 'util';
+import { Task } from './task';
 
-import readline = require('readline');
-import util = require('util');
-
-import task = require('./task');
-
-function splitFirstSpace(s: string) {
-    var pos = s.indexOf(' ');
-    if(pos === -1) {
-        return [s];
-    }
-    return [s.substr(0, pos), s.substr(pos+1)]
+enum Commands {
+    SHOW = 'show',
+    ADD_PROJECT = 'add project',
+    ADD_TASK = 'add task',
+    CHECK = 'check',
+    UNCHECK = 'uncheck',
+    HELP = 'help',
+    QUIT = "QUIT"
 }
 
-export class TaskList
-{
-    static QUIT = 'quit';
-    private readline;
-    private tasks: {[index: string]: task.Task[]} = {};
+export class TaskList {
+    private readonly readlineInterface;
+    private readonly tasks: Record<string, Task[]> = {};
     private lastId = 0;
 
-    constructor(reader: NodeJS.ReadableStream, writer: NodeJS.WritableStream) {
-
-        this.readline = readline.createInterface({
+    constructor(private readonly reader: NodeJS.ReadableStream, private readonly writer: NodeJS.WritableStream) {
+        this.readlineInterface = readline.createInterface({
             terminal: false,
             input: reader,
-            output: writer
+            output: writer,
         });
 
-        this.readline.setPrompt("> ");
-        this.readline.on('line', (cmd) => {
-            if(cmd == TaskList.QUIT) {
-                this.readline.close();
-                return;
-            }
-            this.execute(cmd);
-            this.readline.prompt();
-        });
-        this.readline.on('close', () => {
-            writer.end();
-        });
+        this.setupReadline();
     }
 
-    println(ln: string) {
-        this.readline.output.write(ln);
-        this.readline.output.write('\n');
+    private setupReadline() {
+        this.readlineInterface.setPrompt('> ');
+        this.readlineInterface.on('line', this.handleCommand.bind(this));
+        this.readlineInterface.on('close', () => this.writer.end());
     }
 
-    run() {
-        this.readline.prompt();
-    }
+    private handleCommand(commandLine: string) {
+        const [command, rest] = this.splitFirstSpace(commandLine);
 
-    forEachProject(func: (key: string, value: task.Task[]) => any) {
-        for(var key in this.tasks) {
-            if(this.tasks.hasOwnProperty(key))
-                func(key, this.tasks[key])
-        }
-    }
-
-    execute(commandLine: string) {
-        var commandRest = splitFirstSpace(commandLine);
-        var command = commandRest[0];
         switch (command) {
-            case "show":
+            case Commands.QUIT:
+                this.readlineInterface.close();
+                break;
+            case Commands.SHOW:
                 this.show();
                 break;
-            case "add":
-                this.add(commandRest[1]);
+            case Commands.ADD_PROJECT:
+                this.addProject(rest);
                 break;
-            case "check":
-                this.check(commandRest[1]);
+            case Commands.ADD_TASK:
+                this.addTask(rest);
                 break;
-            case "uncheck":
-                this.uncheck(commandRest[1]);
+            case Commands.CHECK:
+                this.setDone(rest, true);
                 break;
-            case "help":
+            case Commands.UNCHECK:
+                this.setDone(rest, false);
+                break;
+            case Commands.HELP:
                 this.help();
                 break;
             default:
                 this.error(command);
                 break;
         }
+
+        this.readlineInterface.prompt();
+    }
+
+    private splitFirstSpace(s: string): [string, string] {
+        const pos = s.indexOf(' ');
+        if (pos === -1) {
+            return [s, ''];
+        }
+        return [s.substr(0, pos), s.substr(pos + 1)];
     }
 
     private show() {
-        this.forEachProject((project, taskList) => {
+        for (const [project, taskList] of Object.entries(this.tasks)) {
             this.println(project);
             taskList.forEach((task) => {
-                this.println(util.format("    [%s] %d: %s", (task.done ? 'x' : ' '), task.id, task.description));
+                this.println(util.format('    [%s] %d: %s', task.done ? 'x' : ' ', task.id, task.description));
             });
             this.println('');
-        });
-    }
-
-    private add(commandLine: string) {
-        var subcommandRest = splitFirstSpace(commandLine);
-        var subcommand = subcommandRest[0];
-        if (subcommand === "project") {
-            this.addProject(subcommandRest[1]);
-        } else if (subcommand === "task") {
-            var projectTask = splitFirstSpace(subcommandRest[1]);
-            this.addTask(projectTask[0], projectTask[1]);
         }
     }
 
@@ -108,57 +88,60 @@ export class TaskList
         this.tasks[name] = [];
     }
 
-    private addTask(project: string, description: string) {
-        var projectTasks = this.tasks[project];
-        if (projectTasks == null) {
-            this.println(util.format("Could not find a project with the name \"%s\".", project));
+    private addTask(commandLine: string) {
+        const [project, description] = this.splitFirstSpace(commandLine);
+        const projectTasks = this.tasks[project];
+
+        if (!projectTasks) {
+            this.println(util.format('Could not find a project with the name "%s".', project));
             return;
         }
-        projectTasks.push(new task.Task(this.nextId(), description, false));
-    }
 
-    private check(idString: string) {
-        this.setDone(idString, true);
-    }
-
-    private uncheck(idString: string) {
-        this.setDone(idString, false);
+        projectTasks.push(new Task(this.nextId(), description, false));
     }
 
     private setDone(idString: string, done: boolean) {
-        var id = parseInt(idString, 10);
-        var found = false;
-        this.forEachProject((project, taskList) => {
-            taskList.forEach((task) => {
-                if (task.id == id) {
-                    task.done = done;
-                    found = true;
-                }
-            });
-        });
-        if(!found)
-            this.println(util.format("Could not find a task with an ID of %d.", id));
+        const id = parseInt(idString, 10);
+
+        for (const taskList of Object.values(this.tasks)) {
+            const task = taskList.find((t) => t.id === id);
+            if (task) {
+                task.done = done;
+                return;
+            }
+        }
+
+        this.println(util.format('Could not find a task with an ID of %d.', id));
     }
 
     private help() {
-        this.println("Commands:");
-        this.println("  show");
-        this.println("  add project <project name>");
-        this.println("  add task <project name> <task description>");
-        this.println("  check <task ID>");
-        this.println("  uncheck <task ID>");
-        this.println("");
+        this.println('Commands:');
+        this.println('  show');
+        this.println('  add project <project name>');
+        this.println('  add task <project name> <task description>');
+        this.println('  check <task ID>');
+        this.println('  uncheck <task ID>');
+        this.println('');
     }
 
     private error(command: string) {
-        this.println('I don\'t know what the command "' + command + '" is.');
+        this.println(`I don't know what the command "${command}" is.`);
+    }
+
+    private println(ln: string) {
+        this.readlineInterface.output.write(ln);
+        this.readlineInterface.output.write('\n');
     }
 
     private nextId(): number {
         return ++this.lastId;
     }
+
+    run() {
+        this.readlineInterface.prompt();
+    }
 }
 
-if(require.main == module) {
-    new TaskList(process.stdin, process.stdout).run()
+if (require.main === module) {
+    new TaskList(process.stdin, process.stdout).run();
 }
